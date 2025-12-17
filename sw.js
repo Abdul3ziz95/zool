@@ -1,3 +1,4 @@
+
 const CACHE_NAME = 'whatsapp-direct-app-v1';
 // قائمة بجميع الملفات التي يجب تخزينها مؤقتاً للتشغيل دون اتصال
 const urlsToCache = [
@@ -54,4 +55,3 @@ self.addEventListener('activate', (event) => {
         })
     );
 });
-
