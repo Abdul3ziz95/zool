@@ -7,7 +7,7 @@
     <title>مراسل عبد العزيز للواتساب</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght+400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
     <link rel="shortcut icon" href="whatsapp-icon.png" type="image/png">
 </head>
@@ -62,10 +62,10 @@
         const installButton = document.getElementById('installButton');
 
         // ************** منطق التثبيت المنبثق (Install Prompt Logic) **************
-        // هذا الجزء يضمن ظهور الزر المخصص بشكل مستمر
+        
+        // إظهار الزر المخصص بشكل دائم (بمجرد تحميل الصفحة)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // إظهار زر التثبيت المخصص مباشرة عند تحميل الصفحة
                 installButton.style.display = 'block';
             });
         }
@@ -87,7 +87,7 @@
                     deferredPrompt = null; 
                 });
             } else {
-                // رسالة بديلة إذا لم تظهر النافذة التلقائية (مثل iOS أو متصفحات أخرى)
+                // رسالة بديلة إذا لم تظهر النافذة التلقائية
                 alert('لتثبيت التطبيق: افتح قائمة المتصفح (⋮) واختر "التثبيت" أو "إضافة إلى الشاشة الرئيسية".');
             }
         });
