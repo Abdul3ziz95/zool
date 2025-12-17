@@ -7,7 +7,7 @@
     <title>مراسل عبد العزيز للواتساب</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght+400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
     <link rel="shortcut icon" href="whatsapp-icon.png" type="image/png">
 </head>
@@ -62,26 +62,32 @@
         const installButton = document.getElementById('installButton');
 
         // ************** منطق التثبيت المنبثق (Install Prompt Logic) **************
+        // هذا الجزء يضمن ظهور الزر المخصص بشكل مستمر
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // إظهار زر التثبيت المخصص مباشرة عند تحميل الصفحة
+                installButton.style.display = 'block';
+            });
+        }
+        
+        // المتصفح يطلق هذا الحدث إذا كان التطبيق جاهزاً للتثبيت
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e; 
-            installButton.style.display = 'block';
         });
 
         installButton.addEventListener('click', (e) => {
-            installButton.style.display = 'none';
-
+            // محاولة إطلاق نافذة التثبيت الرسمية
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
-                        console.log('المستخدم وافق على التثبيت');
-                    } else {
-                        console.log('المستخدم رفض التثبيت');
+                        installButton.style.display = 'none'; // إخفاء الزر بعد الموافقة
                     }
                     deferredPrompt = null; 
                 });
             } else {
+                // رسالة بديلة إذا لم تظهر النافذة التلقائية (مثل iOS أو متصفحات أخرى)
                 alert('لتثبيت التطبيق: افتح قائمة المتصفح (⋮) واختر "التثبيت" أو "إضافة إلى الشاشة الرئيسية".');
             }
         });
@@ -179,10 +185,10 @@
         populateCountries();
         fetchUserCountry();
 
-        // ************** التعديل الأخير لـ Service Worker (المسار المطلق) **************
+        // ************** تسجيل Service Worker (المسار المطلق الموثوق) **************
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // نستخدم المسار المطلق الذي أثبت موثوقيته على GitHub Pages
+                // نستخدم المسار المطلق /zool/sw.js وهو الأكثر موثوقية على GitHub Pages
                 navigator.serviceWorker.register('/zool/sw.js', { scope: '/zool/' })
                     .then((registration) => {
                         console.log('ServiceWorker registration successful with scope: ', registration.scope);
