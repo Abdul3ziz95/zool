@@ -178,6 +178,21 @@
         // تنفيذ الدوال عند تحميل الصفحة
         populateCountries();
         fetchUserCountry();
+
+        // ************** تسجيل Service Worker لإصلاح مشكلة التثبيت **************
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // ملاحظة: /zool/ هو اسم المستودع (Project Path) الضروري لـ GitHub Pages
+                navigator.serviceWorker.register('/zool/sw.js', { scope: '/zool/' })
+                    .then((registration) => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch((err) => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+        // ************************************************************
     </script>
 </body>
 </html>
