@@ -1,0 +1,106 @@
+:root {
+    --whatsapp-green: #25D366;
+    --light-bg: #f0f2f5;
+    --dark-text: #1a1a1a;
+    --border-color: #ddd;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: var(--light-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    direction: rtl;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.title {
+    color: var(--whatsapp-green);
+    margin-bottom: 35px;
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+label {
+    display: block;
+    color: var(--dark-text);
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+input[type="tel"], select {
+    width: 100%;
+    padding: 15px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: right;
+    transition: border-color 0.3s;
+    -webkit-appearance: none; /* إزالة مظهر المتصفح الافتراضي */
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #fff;
+}
+
+input[type="tel"]:focus, select:focus {
+    border-color: var(--whatsapp-green);
+    outline: none;
+}
+
+button {
+    width: 100%;
+    background-color: var(--whatsapp-green);
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button:hover {
+    background-color: #1DA851;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+}
+
+.note {
+    font-size: 12px;
+    color: #999;
+    margin-top: 25px;
+}
