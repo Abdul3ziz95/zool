@@ -25,6 +25,7 @@
         <button id="installButton" class="install-prompt-button" style="display: none;">
             📲 تثبيت كتطبيق على شاشتك
         </button>
+        
         <div class="input-group">
             <label for="countryCode">اختر الدولة أو دعنا نكتشفها لك:</label>
             <select id="countryCode" onchange="updateFlagAndCode(this.value)">
@@ -58,58 +59,64 @@
     <script>
         // المتغير لتخزين حدث التثبيت
         let deferredPrompt; 
-        
-        // ربط الزر
         const installButton = document.getElementById('installButton');
 
         // ************** منطق التثبيت المنبثق (Install Prompt Logic) **************
         window.addEventListener('beforeinstallprompt', (e) => {
-            // منع المتصفح من إظهار النافذة التلقائية
             e.preventDefault();
-            // تخزين الحدث لاستخدامه لاحقاً (عند الضغط على الزر)
             deferredPrompt = e; 
-            // إظهار الزر المخصص للتثبيت
             installButton.style.display = 'block';
         });
 
         installButton.addEventListener('click', (e) => {
-            // إخفاء زرنا بعد الضغط عليه
             installButton.style.display = 'none';
 
             if (deferredPrompt) {
-                // إظهار النافذة المنبثقة الأصلية للمتصفح
                 deferredPrompt.prompt();
-                
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
                         console.log('المستخدم وافق على التثبيت');
                     } else {
                         console.log('المستخدم رفض التثبيت');
                     }
-                    deferredPrompt = null; // تفريغ الحدث بعد الاستخدام
+                    deferredPrompt = null; 
                 });
             } else {
-                // رسالة إرشادية لأجهزة iOS أو الأجهزة التي لا تدعم الحدث
                 alert('لتثبيت التطبيق: افتح قائمة المتصفح (⋮) واختر "التثبيت" أو "إضافة إلى الشاشة الرئيسية".');
             }
         });
         // *******************************************************************
         
-        // مصفوفة الدول (تم حذفها لتجنب التكرار، استخدم الكود السابق)
+        // بيانات الدول العربية وجنوب السودان
         const countryData = [
-            // ... (استخدم نفس مصفوفة الدول من الكود السابق)
             { name: 'المملكة العربية السعودية', code: '966', iso: 'sa' },
             { name: 'السودان', code: '249', iso: 'sd' },
-            // ... وباقي الدول
+            { name: 'الإمارات العربية المتحدة', code: '971', iso: 'ae' },
+            { name: 'مصر', code: '20', iso: 'eg' },
+            { name: 'الكويت', code: '965', iso: 'kw' },
+            { name: 'قطر', code: '974', iso: 'qa' },
+            { name: 'البحرين', code: '973', iso: 'bh' },
+            { name: 'سلطنة عُمان', code: '968', iso: 'om' },
+            { name: 'المغرب', code: '212', iso: 'ma' },
+            { name: 'الجزائر', code: '213', iso: 'dz' },
+            { name: 'تونس', code: '216', iso: 'tn' },
+            { name: 'الأردن', code: '962', iso: 'jo' },
+            { name: 'فلسطين', code: '970', iso: 'ps' },
+            { name: 'لبنان', code: '961', iso: 'lb' },
+            { name: 'العراق', code: '964', iso: 'iq' },
+            { name: 'اليمن', code: '967', iso: 'ye' },
+            { name: 'ليبيا', code: '218', iso: 'ly' },
+            { name: 'موريتانيا', code: '222', iso: 'mr' },
+            { name: 'الصومال', code: '252', iso: 'so' },
+            { name: 'جيبوتي', code: '253', iso: 'dj' },
+            { name: 'جزر القمر', code: '269', iso: 'km' },
+            { name: 'سوريا', code: '963', iso: 'sy' },
+            { name: 'جنوب السودان', code: '211', iso: 'ss' }
         ];
-        
+
         const selectElement = document.getElementById('countryCode');
         const currentFlagSpan = document.getElementById('currentFlag');
         const currentCodeSpan = document.getElementById('currentCode');
-        
-        // (باقي وظائف populateCountries, updateFlagAndCode, fetchUserCountry, openWhatsApp تبقى كما هي)
-        
-        // ... (هنا يتم إدراج بقية كود JavaScript الذي ينتهي بـ populateCountries() و fetchUserCountry())
         
         function populateCountries() {
             countryData.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
@@ -121,6 +128,7 @@
                 option.textContent = `(${country.code}+) ${country.name}`;
                 selectElement.appendChild(option);
             });
+            // اختيار السودان كقيمة افتراضية
             selectElement.value = '249'; 
             updateFlagAndCode('249');
         }
@@ -134,12 +142,16 @@
             }
         }
 
+        // محاولة تحديد الدولة التلقائي بناءً على IP (باستخدام خدمة مجانية)
         async function fetchUserCountry() {
             try {
                 const response = await fetch('https://ipapi.co/json/');
                 const data = await response.json();
+                
                 const userIso = data.country_code.toLowerCase();
+                
                 const detectedCountry = countryData.find(c => c.iso === userIso);
+                
                 if (detectedCountry) {
                     updateFlagAndCode(detectedCountry.code);
                 }
@@ -163,6 +175,7 @@
             window.open(whatsappLink, '_blank');
         }
 
+        // تنفيذ الدوال عند تحميل الصفحة
         populateCountries();
         fetchUserCountry();
     </script>
