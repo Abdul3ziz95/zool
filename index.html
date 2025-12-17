@@ -179,11 +179,14 @@
         populateCountries();
         fetchUserCountry();
 
-        // ************** تسجيل Service Worker لإصلاح مشكلة التثبيت **************
+        // ************** التعديل الحاسم لتسجيل Service Worker **************
+        // نستخدم window.location.pathname للحصول على المسار الأساسي الديناميكي
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // ملاحظة: /zool/ هو اسم المستودع (Project Path) الضروري لـ GitHub Pages
-                navigator.serviceWorker.register('/zool/sw.js', { scope: '/zool/' })
+                // نأخذ المسار الأساسي (مثل /zool/) ونستخدمه لنطاق Service Worker
+                const baseUrl = window.location.pathname.endsWith('/') ? window.location.pathname : window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+
+                navigator.serviceWorker.register(baseUrl + 'sw.js', { scope: baseUrl })
                     .then((registration) => {
                         console.log('ServiceWorker registration successful with scope: ', registration.scope);
                     })
