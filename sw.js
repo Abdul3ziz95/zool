@@ -1,52 +1,47 @@
 
-const CACHE_NAME = 'whatsapp-direct-app-v1';
-// قائمة بجميع الملفات التي يجب تخزينها مؤقتاً للتشغيل دون اتصال
+const CACHE_NAME = 'whatsapp-messenger-v20251223'; //  *** رقم الإصدار الجديد ***
 const urlsToCache = [
-    '/zool/', // المسار الجذر للمشروع
-    '/zool/index.html',
-    '/zool/style.css',
-    '/zool/manifest.json',
-    '/zool/whatsapp-icon.png',
-    '/zool/profile-pic.png',
-    // مكتبات خارجية مهمة لعمل الأعلام
-    'https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap',
+    '/zool/',
+    '/zool/index.html?v=20251223', 
+    '/zool/style.css?v=20251223', 
+    '/zool/script.js?v=20251223', // ملف JS الجديد
+    '/zool/manifest.json?v=20251223',
+    // ... (بقية ملفات الأعلام والأيقونات الثابتة) ...
     'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css',
-    'https://ipapi.co/json/'
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
+    'https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap',
+    'whatsapp-icon.png'
 ];
 
-// تثبيت Service Worker وتخزين الملفات مؤقتاً
-self.addEventListener('install', (event) => {
+self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then((cache) => {
+            .then(cache => {
                 console.log('Opened cache');
                 return cache.addAll(urlsToCache);
             })
     );
 });
 
-// جلب الملفات المخزنة مؤقتاً (لتمكين وضع عدم الاتصال)
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
-            .then((response) => {
-                // العودة بالملف من التخزين المؤقت إذا كان موجوداً
+            .then(response => {
                 if (response) {
                     return response;
                 }
-                // وإلا، اذهب لجلب الملف من الشبكة
                 return fetch(event.request);
-            })
+            }
+        )
     );
 });
 
-// تحديث Service Worker (تنظيف التخزين المؤقت القديم)
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', event => {
     const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
-        caches.keys().then((cacheNames) => {
+        caches.keys().then(cacheNames => {
             return Promise.all(
-                cacheNames.map((cacheName) => {
+                cacheNames.map(cacheName => {
                     if (cacheWhitelist.indexOf(cacheName) === -1) {
                         return caches.delete(cacheName);
                     }
