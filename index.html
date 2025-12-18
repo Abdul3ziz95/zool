@@ -4,17 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مراسل عبد العزيز للواتساب</title>
+    <title>مراسل الواتساب المباشر - Abdul3ziz95</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
     <link rel="shortcut icon" href="whatsapp-icon.png" type="image/png">
 </head>
 <body>
-    <div class="page-wrapper"> 
-        <div class="container">
+    
+    <div class="page-wrapper" id="pageWrapper"> 
+        <div class="container" id="mainContainer">
             
             <h1 class="app-heading">مراسل الواتساب المباشر</h1>
             <p class="description">أسرع طريقة للتواصل، أدخل الرقم وابدأ المحادثة فوراً.</p>
@@ -26,45 +27,37 @@
             <div class="input-group">
                 <label for="countrySearchDisplay">اختر الدولة أو ابحث عنها:</label>
                 <div class="country-display" id="countrySearchDisplay" onclick="openCountryModal()">
-                    <span id="selectedCountryName">السودان (+249)</span>
+                    <span id="selectedCountryName" dir="rtl"></span>
                     <i class="fas fa-chevron-down country-dropdown-icon"></i>
                 </div>
             </div>
 
             <div class="phone-input-container">
                 <div class="country-code-wrapper">
-                    <span id="currentFlag" class="flag-icon flag-icon-sd"></span>
-                    <input type="tel" id="codeInput" value="+249" inputmode="numeric" placeholder="+XXX" oninput="updateFlagByCode(this.value)" disabled>
+                    <span id="currentFlag" class="flag-icon"></span>
+                    <input type="tel" id="codeInput" value="" disabled>
                 </div>
                 <input type="tel" id="phoneInput" placeholder="أدخل الرقم المحلي (بدون الرمز)" inputmode="numeric">
             </div>
 
-            <button onclick="openWhatsApp()">
+            <button id="whatsappButton" onclick="openWhatsApp()">
                 <img src="whatsapp-icon.png" alt="WhatsApp Icon" class="icon"> بدء المحادثة الآن
             </button>
 
-            <p class="note prominent-note">يرجى التأكد من صحة رمز الدولة المدخل.</p>
+            <p class="note prominent-note">يرجى التأكد من صحة رمز الدولة المدخل قبل الضغط على بدء المحادثة.</p>
 
             <div class="share-section">
                 <p class="share-title">شارك التطبيق مع أصدقائك:</p>
                 <div class="share-icons">
-                    <button class="share-btn facebook" onclick="shareApp('facebook')">
-                        <i class="fab fa-facebook-f"></i>
-                    </button>
-                    <button class="share-btn messenger" onclick="shareApp('messenger')">
-                        <i class="fab fa-facebook-messenger"></i>
-                    </button>
-                    <button class="share-btn whatsapp" onclick="shareApp('whatsapp')">
-                        <i class="fab fa-whatsapp"></i>
-                    </button>
+                    <button class="share-btn facebook" onclick="shareApp('facebook')"><i class="fab fa-facebook-f"></i></button>
+                    <button class="share-btn messenger" onclick="shareApp('messenger')"><i class="fab fa-facebook-messenger"></i></button>
+                    <button class="share-btn whatsapp" onclick="shareApp('whatsapp')"><i class="fab fa-whatsapp"></i></button>
                 </div>
             </div>
         </div>
 
         <footer class="app-footer">
-            <a href="https://linktr.ee/abdul3ziz95" target="_blank" class="contact-link bold-link">
-                📞 اتصل بي
-            </a>
+            <a href="https://linktr.ee/abdul3ziz95" target="_blank" class="contact-link bold-link">📞 اتصل بي</a>
             <p class="copyright-text">جميع الحقوق محفوظة © 2025. <span class="owner-name">Abdul3ziz95</span></p>
         </footer>
     </div>
@@ -73,7 +66,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>اختر الدولة</h2>
-                <span class="close-btn" onclick="closeCountryModal()">&times;</span>
+                <span class="close-btn" onclick="closeCountryModal()"><i class="fas fa-times"></i></span>
             </div>
             <input type="text" id="modalSearchInput" placeholder="ابحث عن اسم الدولة أو رمزها" oninput="filterCountries(this.value)">
             <ul id="countryListUl" class="country-list">
@@ -81,148 +74,152 @@
         </div>
     </div>
     <script>
+        // **********************************************
+        // ** قائمة الدول - يرجى وضع هذه القائمة في ملف JS منفصل إذا أصبح كبيراً جداً **
+        // **********************************************
+        const countryData = [
+            { name: 'السودان', code: '249', iso: 'sd' }, // جعل السودان أولاً لسهولة الوصول
+            { name: 'المملكة العربية السعودية', code: '966', iso: 'sa' },
+            { name: 'الإمارات العربية المتحدة', code: '971', iso: 'ae' },
+            { name: 'مصر', code: '20', iso: 'eg' },
+            { name: 'الولايات المتحدة الأمريكية', code: '1', iso: 'us' },
+            { name: 'المملكة المتحدة', code: '44', iso: 'gb' },
+            { name: 'الجزائر', code: '213', iso: 'dz' }, 
+            { name: 'الأردن', code: '962', iso: 'jo' }, 
+            { name: 'الكويت', code: '965', iso: 'kw' }, 
+            { name: 'قطر', code: '974', iso: 'qa' }, 
+            { name: 'عُمان', code: '968', iso: 'om' },
+            { name: 'اليمن', code: '967', iso: 'ye' },
+            { name: 'ليبيا', code: '218', iso: 'ly' },
+            { name: 'المغرب', code: '212', iso: 'ma' },
+            { name: 'فلسطين', code: '970', iso: 'ps' },
+            { name: 'العراق', code: '964', iso: 'iq' },
+            { name: 'سوريا', code: '963', iso: 'sy' },
+            { name: 'لبنان', code: '961', iso: 'lb' },
+            { name: 'تونس', code: '216', iso: 'tn' },
+            { name: 'أفغانستان', code: '93', iso: 'af' }, { name: 'ألبانيا', code: '355', iso: 'al' }, 
+            { name: 'ساموا الأمريكية', code: '1684', iso: 'as' }, { name: 'أندورا', code: '376', iso: 'ad' }, 
+            { name: 'أنغولا', code: '244', iso: 'ao' }, { name: 'أنغويلا', code: '1264', iso: 'ai' }, 
+            { name: 'الأرجنتين', code: '54', iso: 'ar' }, { name: 'أرمينيا', code: '374', iso: 'am' }, 
+            { name: 'أروبا', code: '297', iso: 'aw' }, { name: 'أستراليا', code: '61', iso: 'au' }, 
+            { name: 'النمسا', code: '43', iso: 'at' }, { name: 'أذربيجان', code: '994', iso: 'az' }, 
+            { name: 'الباهاماس', code: '1242', iso: 'bs' }, { name: 'البحرين', code: '973', iso: 'bh' }, 
+            { name: 'بنغلاديش', code: '880', iso: 'bd' }, { name: 'باربادوس', code: '1246', iso: 'bb' }, 
+            { name: 'بيلاروسيا', code: '375', iso: 'by' }, { name: 'بلجيكا', code: '32', iso: 'be' }, 
+            { name: 'بليز', code: '501', iso: 'bz' }, { name: 'بنين', code: '229', iso: 'bj' }, 
+            { name: 'برمودا', code: '1441', iso: 'bm' }, { name: 'بوتان', code: '975', iso: 'bt' }, 
+            { name: 'بوليفيا', code: '591', iso: 'bo' }, { name: 'البوسنة والهرسك', code: '387', iso: 'ba' }, 
+            { name: 'بوتسوانا', code: '267', iso: 'bw' }, { name: 'البرازيل', code: '55', iso: 'br' }, 
+            { name: 'بروناي', code: '673', iso: 'bn' }, { name: 'بلغاريا', code: '359', iso: 'bg' }, 
+            { name: 'بوركينا فاسو', code: '226', iso: 'bf' }, { name: 'بوروندي', code: '257', iso: 'bi' }, 
+            { name: 'كمبوديا', code: '855', iso: 'kh' }, { name: 'الكاميرون', code: '237', iso: 'cm' }, 
+            { name: 'كندا', code: '1', iso: 'ca' }, { name: 'الرأس الأخضر', code: '238', iso: 'cv' }, 
+            { name: 'جزر كايمان', code: '1345', iso: 'ky' }, { name: 'إفريقيا الوسطى', code: '236', iso: 'cf' }, 
+            { name: 'تشاد', code: '235', iso: 'td' }, { name: 'تشيلي', code: '56', iso: 'cl' }, 
+            { name: 'الصين', code: '86', iso: 'cn' }, { name: 'كولومبيا', code: '57', iso: 'co' }, 
+            { name: 'جزر القمر', code: '269', iso: 'km' }, { name: 'الكونغو', code: '242', iso: 'cg' }, 
+            { name: 'كوستاريكا', code: '506', iso: 'cr' }, { name: 'كرواتيا', code: '385', iso: 'hr' }, 
+            { name: 'كوبا', code: '53', iso: 'cu' }, { name: 'قبرص', code: '357', iso: 'cy' }, 
+            { name: 'جمهورية التشيك', code: '420', iso: 'cz' }, { name: 'الدنمارك', code: '45', iso: 'dk' }, 
+            { name: 'جيبوتي', code: '253', iso: 'dj' }, { name: 'دومينيكا', code: '1767', iso: 'dm' }, 
+            { name: 'جمهورية الدومينيكان', code: '1809', iso: 'do' }, { name: 'الإكوادور', code: '593', iso: 'ec' }, 
+            { name: 'السلفادور', code: '503', iso: 'sv' }, { name: 'غينيا الاستوائية', code: '240', iso: 'gq' }, 
+            { name: 'إريتريا', code: '291', iso: 'er' }, { name: 'إستونيا', code: '372', iso: 'ee' }, 
+            { name: 'إثيوبيا', code: '251', iso: 'et' }, { name: 'جزر فارو', code: '298', iso: 'fo' }, 
+            { name: 'فيجي', code: '679', iso: 'fj' }, { name: 'فنلندا', code: '358', iso: 'fi' }, 
+            { name: 'فرنسا', code: '33', iso: 'fr' }, { name: 'الغابون', code: '241', iso: 'ga' }, 
+            { name: 'غامبيا', code: '220', iso: 'gm' }, { name: 'جورجيا', code: '995', iso: 'ge' }, 
+            { name: 'ألمانيا', code: '49', iso: 'de' }, { name: 'غانا', code: '233', iso: 'gh' }, 
+            { name: 'اليونان', code: '30', iso: 'gr' }, { name: 'غرينادا', code: '1473', iso: 'gd' }, 
+            { name: 'غواتيمالا', code: '502', 'gt' }, { name: 'غينيا', code: '224', iso: 'gn' }, 
+            { name: 'غينيا بيساو', code: '245', iso: 'gw' }, { name: 'غيانا', code: '592', iso: 'gy' }, 
+            { name: 'هايتي', code: '509', iso: 'ht' }, { name: 'هندوراس', code: '504', iso: 'hn' }, 
+            { name: 'هونغ كونغ', code: '852', iso: 'hk' }, { name: 'المجر', code: '36', iso: 'hu' }, 
+            { name: 'آيسلندا', code: '354', iso: 'is' }, { name: 'الهند', code: '91', iso: 'in' }, 
+            { name: 'إندونيسيا', code: '62', iso: 'id' }, { name: 'إيران', code: '98', iso: 'ir' }, 
+            { name: 'أيرلندا', code: '353', iso: 'ie' }, { name: 'إسرائيل', code: '972', iso: 'il' }, 
+            { name: 'إيطاليا', code: '39', iso: 'it' }, { name: 'ساحل العاج', code: '225', iso: 'ci' }, 
+            { name: 'جامايكا', code: '1876', iso: 'jm' }, { name: 'اليابان', code: '81', iso: 'jp' }, 
+            { name: 'كازاخستان', code: '7', iso: 'kz' }, { name: 'كينيا', code: '254', iso: 'ke' }, 
+            { name: 'كيريباتي', code: '686', iso: 'ki' }, { name: 'كوريا الجنوبية', code: '82', iso: 'kr' }, 
+            { name: 'قيرغيزستان', code: '996', iso: 'kg' }, { name: 'لاوس', code: '856', iso: 'la' }, 
+            { name: 'لاتفيا', code: '371', iso: 'lv' }, { name: 'ليسوتو', code: '266', iso: 'ls' }, 
+            { name: 'ليبيريا', code: '231', iso: 'lr' }, { name: 'ليتوانيا', code: '370', iso: 'lt' }, 
+            { name: 'لوكسمبورغ', code: '352', iso: 'lu' }, { name: 'مدغشقر', code: '261', iso: 'mg' }, 
+            { name: 'مالاوي', code: '265', iso: 'mw' }, { name: 'ماليزيا', code: '60', iso: 'my' }, 
+            { name: 'جزر المالديف', code: '960', iso: 'mv' }, { name: 'مالي', code: '223', iso: 'ml' }, 
+            { name: 'مالطا', code: '356', iso: 'mt' }, { name: 'موريتانيا', code: '222', iso: 'mr' }, 
+            { name: 'موريشيوس', code: '230', iso: 'mu' }, { name: 'المكسيك', code: '52', iso: 'mx' }, 
+            { name: 'مولدوفا', code: '373', iso: 'md' }, { name: 'موناكو', code: '377', iso: 'mc' }, 
+            { name: 'منغوليا', code: '976', iso: 'mn' }, { name: 'موزمبيق', code: '258', iso: 'mz' }, 
+            { name: 'ميانمار', code: '95', iso: 'mm' }, { name: 'ناميبيا', code: '264', iso: 'na' }, 
+            { name: 'نيبال', code: '977', iso: 'np' }, { name: 'هولندا', code: '31', iso: 'nl' }, 
+            { name: 'نيوزيلندا', code: '64', iso: 'nz' }, { name: 'نيكاراغوا', code: '505', iso: 'ni' }, 
+            { name: 'النيجر', code: '227', iso: 'ne' }, { name: 'نيجيريا', code: '234', iso: 'ng' }, 
+            { name: 'النرويج', code: '47', iso: 'no' }, { name: 'باكستان', code: '92', iso: 'pk' }, 
+            { name: 'بنما', code: '507', iso: 'pa' }, { name: 'بابوا غينيا الجديدة', code: '675', iso: 'pg' }, 
+            { name: 'باراغواي', code: '595', iso: 'py' }, { name: 'بيرو', code: '51', iso: 'pe' }, 
+            { name: 'الفلبين', code: '63', iso: 'ph' }, { name: 'بولندا', code: '48', iso: 'pl' }, 
+            { name: 'البرتغال', code: '351', iso: 'pt' }, { name: 'رواندا', code: '250', iso: 'rw' }, 
+            { name: 'روسيا', code: '7', iso: 'ru' }, { name: 'السنغال', code: '221', iso: 'sn' }, 
+            { name: 'صربيا', code: '381', iso: 'rs' }, { name: 'سيشل', code: '248', iso: 'sc' }, 
+            { name: 'سنغافورة', code: '65', iso: 'sg' }, { name: 'الصومال', code: '252', iso: 'so' }, 
+            { name: 'جنوب أفريقيا', code: '27', iso: 'za' }, { name: 'جنوب السودان', code: '211', iso: 'ss' }, 
+            { name: 'إسبانيا', code: '34', iso: 'es' }, { name: 'سريلانكا', code: '94', iso: 'lk' }, 
+            { name: 'السويد', code: '46', iso: 'se' }, { name: 'سويسرا', code: '41', iso: 'ch' }, 
+            { name: 'تايوان', code: '886', iso: 'tw' }, { name: 'تنزانيا', code: '255', iso: 'tz' }, 
+            { name: 'تايلاند', code: '66', iso: 'th' }, { name: 'توغو', code: '228', iso: 'tg' }, 
+            { name: 'تركيا', code: '90', iso: 'tr' }, { name: 'أوغندا', code: '256', iso: 'ug' }, 
+            { name: 'أوكرانيا', code: '380', iso: 'ua' }, { name: 'أوروغواي', code: '598', iso: 'uy' }, 
+            { name: 'فنزويلا', code: '58', iso: 've' }, { name: 'فيتنام', code: '84', iso: 'vn' }, 
+            { name: 'زامبيا', code: '260', iso: 'zm' }, { name: 'زيمبابوي', code: '263', iso: 'zw' }
+        ];
+
+        // **********************************************
+        // ** منطق JavaScript مُحسَّن **
+        // **********************************************
+        
         const APP_LINK = 'https://abdul3ziz95.github.io/zool/';
         const SHARE_MESSAGE = 'جربوا مراسل الواتساب السوداني الفوري! أسرع طريقة لبدء محادثة دون حفظ الرقم. الرابط: ' + APP_LINK;
 
-        // العناصر
-        const installButton = document.getElementById('installButton');
-        const countryModal = document.getElementById('countryModal');
-        const countryListUl = document.getElementById('countryListUl');
-        const selectedCountryName = document.getElementById('selectedCountryName');
-        const currentFlagSpan = document.getElementById('currentFlag');
-        const codeInput = document.getElementById('codeInput'); 
-        const phoneInput = document.getElementById('phoneInput'); 
+        const ELEMENTS = {
+            installButton: document.getElementById('installButton'),
+            countryModal: document.getElementById('countryModal'),
+            countryListUl: document.getElementById('countryListUl'),
+            selectedCountryName: document.getElementById('selectedCountryName'),
+            currentFlag: document.getElementById('currentFlag'),
+            codeInput: document.getElementById('codeInput'), 
+            phoneInput: document.getElementById('phoneInput'),
+            modalSearchInput: document.getElementById('modalSearchInput')
+        };
 
-        // قائمة الدول
-        const countryData = [
-            // القائمة كما هي تماماً في الرد السابق (لن أكررها لتبسيط الكود هنا)
-            { name: 'أفغانستان', code: '93', iso: 'af' }, { name: 'ألبانيا', code: '355', iso: 'al' }, 
-            { name: 'الجزائر', code: '213', iso: 'dz' }, { name: 'ساموا الأمريكية', code: '1684', iso: 'as' },
-            { name: 'أندورا', code: '376', iso: 'ad' }, { name: 'أنغولا', code: '244', iso: 'ao' },
-            { name: 'أنغويلا', code: '1264', iso: 'ai' }, { name: 'أنتاركتيكا', code: '672', iso: 'aq' },
-            { name: 'أنتيغوا وباربودا', code: '1268', iso: 'ag' }, { name: 'الأرجنتين', code: '54', iso: 'ar' },
-            { name: 'أرمينيا', code: '374', iso: 'am' }, { name: 'أروبا', code: '297', iso: 'aw' },
-            { name: 'أستراليا', code: '61', iso: 'au' }, { name: 'النمسا', code: '43', iso: 'at' },
-            { name: 'أذربيجان', code: '994', iso: 'az' }, { name: 'الباهاماس', code: '1242', iso: 'bs' },
-            { name: 'البحرين', code: '973', iso: 'bh' }, { name: 'بنغلاديش', code: '880', iso: 'bd' },
-            { name: 'باربادوس', code: '1246', iso: 'bb' }, { name: 'بيلاروسيا', code: '375', iso: 'by' },
-            { name: 'بلجيكا', code: '32', iso: 'be' }, { name: 'بليز', code: '501', iso: 'bz' },
-            { name: 'بنين', code: '229', iso: 'bj' }, { name: 'برمودا', code: '1441', iso: 'bm' },
-            { name: 'بوتان', code: '975', iso: 'bt' }, { name: 'بوليفيا', code: '591', iso: 'bo' },
-            { name: 'البوسنة والهرسك', code: '387', iso: 'ba' }, { name: 'بوتسوانا', code: '267', iso: 'bw' },
-            { name: 'البرازيل', code: '55', iso: 'br' }, { name: 'المحيط الهندي البريطاني', code: '246', iso: 'io' },
-            { name: 'جزر العذراء البريطانية', code: '1284', iso: 'vg' }, { name: 'بروناي', code: '673', iso: 'bn' },
-            { name: 'بلغاريا', code: '359', iso: 'bg' }, { name: 'بوركينا فاسو', code: '226', iso: 'bf' },
-            { name: 'بوروندي', code: '257', iso: 'bi' }, { name: 'كمبوديا', code: '855', iso: 'kh' },
-            { name: 'الكاميرون', code: '237', iso: 'cm' }, { name: 'كندا', code: '1', iso: 'ca' },
-            { name: 'الرأس الأخضر', code: '238', iso: 'cv' }, { name: 'جزر كايمان', code: '1345', iso: 'ky' },
-            { name: 'إفريقيا الوسطى', code: '236', iso: 'cf' }, { name: 'تشاد', code: '235', iso: 'td' },
-            { name: 'تشيلي', code: '56', iso: 'cl' }, { name: 'الصين', code: '86', iso: 'cn' },
-            { name: 'جزيرة الكريسماس', code: '61', iso: 'cx' }, { name: 'جزر كوكوس', code: '61', iso: 'cc' },
-            { name: 'كولومبيا', code: '57', iso: 'co' }, { name: 'جزر القمر', code: '269', iso: 'km' },
-            { name: 'الكونغو (برازافيل)', code: '242', iso: 'cg' }, { name: 'الكونغو (كينشاسا)', code: '243', iso: 'cd' },
-            { name: 'جزر كوك', code: '682', iso: 'ck' }, { name: 'كوستاريكا', code: '506', iso: 'cr' },
-            { name: 'كرواتيا', code: '385', iso: 'hr' }, { name: 'كوبا', code: '53', iso: 'cu' },
-            { name: 'كوراساو', code: '599', iso: 'cw' }, { name: 'قبرص', code: '357', iso: 'cy' },
-            { name: 'جمهورية التشيك', code: '420', iso: 'cz' }, { name: 'الدنمارك', code: '45', iso: 'dk' },
-            { name: 'جيبوتي', code: '253', iso: 'dj' }, { name: 'دومينيكا', code: '1767', iso: 'dm' },
-            { name: 'جمهورية الدومينيكان', code: '1809', iso: 'do' },
-            { name: 'الإكوادور', code: '593', iso: 'ec' }, { name: 'مصر', code: '20', iso: 'eg' },
-            { name: 'السلفادور', code: '503', iso: 'sv' }, { name: 'غينيا الاستوائية', code: '240', iso: 'gq' },
-            { name: 'إريتريا', code: '291', iso: 'er' }, { name: 'إستونيا', code: '372', iso: 'ee' },
-            { name: 'إثيوبيا', code: '251', iso: 'et' }, { name: 'جزر فوكلاند', code: '500', iso: 'fk' },
-            { name: 'جزر فارو', code: '298', iso: 'fo' }, { name: 'فيجي', code: '679', iso: 'fj' },
-            { name: 'فنلندا', code: '358', iso: 'fi' }, { name: 'فرنسا', code: '33', iso: 'fr' },
-            { name: 'غيانا الفرنسية', code: '594', iso: 'gf' }, { name: 'بولينيزيا الفرنسية', code: '689', iso: 'pf' },
-            { name: 'المناطق الجنوبية الفرنسية', code: '262', iso: 'tf' }, { name: 'الغابون', code: '241', iso: 'ga' },
-            { name: 'غامبيا', code: '220', iso: 'gm' }, { name: 'جورجيا', code: '995', iso: 'ge' },
-            { name: 'ألمانيا', code: '49', iso: 'de' }, { name: 'غانا', code: '233', iso: 'gh' },
-            { name: 'جبل طارق', code: '350', iso: 'gi' }, { name: 'اليونان', code: '30', iso: 'gr' },
-            { name: 'جرينلاند', code: '299', iso: 'gl' }, { name: 'غرينادا', code: '1473', iso: 'gd' },
-            { name: 'جوادلوب', code: '590', iso: 'gp' }, { name: 'غوام', code: '1671', iso: 'gu' },
-            { name: 'غواتيمالا', code: '502', iso: 'gt' }, { name: 'غيرنزي', code: '44', iso: 'gg' },
-            { name: 'غينيا', code: '224', iso: 'gn' }, { name: 'غينيا بيساو', code: '245', iso: 'gw' },
-            { name: 'غيانا', code: '592', iso: 'gy' }, { name: 'هايتي', code: '509', iso: 'ht' },
-            { name: 'هيرد وجزر ماكدونالد', code: '672', iso: 'hm' }, { name: 'الفاتيكان', code: '379', iso: 'va' },
-            { name: 'هندوراس', code: '504', iso: 'hn' }, { name: 'هونغ كونغ', code: '852', iso: 'hk' },
-            { name: 'المجر', code: '36', iso: 'hu' }, { name: 'أيسلندا', code: '354', iso: 'is' },
-            { name: 'الهند', code: '91', iso: 'in' }, { name: 'إندونيسيا', code: '62', iso: 'id' },
-            { name: 'إيران', code: '98', iso: 'ir' }, { name: 'العراق', code: '964', iso: 'iq' },
-            { name: 'أيرلندا', code: '353', iso: 'ie' }, { name: 'جزيرة مان', code: '44', iso: 'im' },
-            { name: 'إسرائيل', code: '972', iso: 'il' }, { name: 'إيطاليا', code: '39', iso: 'it' },
-            { name: 'ساحل العاج', code: '225', iso: 'ci' }, { name: 'جامايكا', code: '1876', iso: 'jm' },
-            { name: 'اليابان', code: '81', iso: 'jp' }, { name: 'جيرسي', code: '44', iso: 'je' },
-            { name: 'الأردن', code: '962', iso: 'jo' }, { name: 'كازاخستان', code: '7', iso: 'kz' },
-            { name: 'كينيا', code: '254', iso: 'ke' }, { name: 'كيريباتي', code: '686', iso: 'ki' },
-            { name: 'كوريا الشمالية', code: '850', iso: 'kp' }, { name: 'كوريا الجنوبية', code: '82', iso: 'kr' },
-            { name: 'الكويت', code: '965', iso: 'kw' }, { name: 'قيرغيزستان', code: '996', iso: 'kg' },
-            { name: 'لاوس', code: '856', iso: 'la' }, { name: 'لاتفيا', code: '371', iso: 'lv' },
-            { name: 'لبنان', code: '961', iso: 'lb' }, { name: 'ليسوتو', code: '266', iso: 'ls' },
-            { name: 'ليبيريا', code: '231', iso: 'lr' }, { name: 'ليبيا', code: '218', iso: 'ly' },
-            { name: 'ليختنشتاين', code: '423', iso: 'li' }, { name: 'ليتوانيا', code: '370', iso: 'lt' },
-            { name: 'لوكسمبورغ', code: '352', iso: 'lu' }, { name: 'ماكاو', code: '853', iso: 'mo' },
-            { name: 'مقدونيا', code: '389', iso: 'mk' }, { name: 'مدغشقر', code: '261', iso: 'mg' },
-            { name: 'مالاوي', code: '265', iso: 'mw' }, { name: 'ماليزيا', code: '60', iso: 'my' },
-            { name: 'جزر المالديف', code: '960', iso: 'mv' }, { name: 'مالي', code: '223', iso: 'ml' },
-            { name: 'مالطا', code: '356', iso: 'mt' }, { name: 'جزر مارشال', code: '692', iso: 'mh' },
-            { name: 'مارتينيك', code: '596', iso: 'mq' }, { name: 'موريتانيا', code: '222', iso: 'mr' },
-            { name: 'موريشيوس', code: '230', iso: 'mu' }, { name: 'مايوت', code: '262', iso: 'yt' },
-            { name: 'المكسيك', code: '52', iso: 'mx' }, { name: 'ميكرونيزيا', code: '691', iso: 'fm' },
-            { name: 'مولدوفا', code: '373', iso: 'md' }, { name: 'موناكو', code: '377', iso: 'mc' },
-            { name: 'منغوليا', code: '976', iso: 'mn' }, { name: 'الجبل الأسود', code: '382', iso: 'me' },
-            { name: 'مونتسيرات', code: '1664', iso: 'ms' }, { name: 'المغرب', code: '212', iso: 'ma' },
-            { name: 'موزمبيق', code: '258', iso: 'mz' }, { name: 'ميانمار', code: '95', iso: 'mm' },
-            { name: 'ناميبيا', code: '264', iso: 'na' }, { name: 'ناورو', code: '674', iso: 'nr' },
-            { name: 'نيبال', code: '977', iso: 'np' }, { name: 'هولندا', code: '31', iso: 'nl' },
-            { name: 'كاليدونيا الجديدة', code: '687', iso: 'nc' }, { name: 'نيوزيلندا', code: '64', iso: 'nz' },
-            { name: 'نيكاراغوا', code: '505', iso: 'ni' }, { name: 'النيجر', code: '227', iso: 'ne' },
-            { name: 'نيجيريا', code: '234', iso: 'ng' }, { name: 'نيوي', code: '683', iso: 'nu' },
-            { name: 'جزيرة نورفولك', code: '672', iso: 'nf' }, { name: 'جزر ماريانا الشمالية', code: '1670', iso: 'mp' },
-            { name: 'النرويج', code: '47', iso: 'no' }, { name: 'عُمان', code: '968', iso: 'om' },
-            { name: 'باكستان', code: '92', iso: 'pk' }, { name: 'بالاو', code: '680', iso: 'pw' },
-            { name: 'فلسطين', code: '970', iso: 'ps' }, { name: 'بنما', code: '507', iso: 'pa' },
-            { name: 'بابوا غينيا الجديدة', code: '675', iso: 'pg' }, { name: 'باراغواي', code: '595', iso: 'py' },
-            { name: 'بيرو', code: '51', iso: 'pe' }, { name: 'الفلبين', code: '63', iso: 'ph' },
-            { name: 'بيتكيرن', code: '64', iso: 'pn' }, { name: 'بولندا', code: '48', iso: 'pl' },
-            { name: 'البرتغال', code: '351', iso: 'pt' }, { name: 'بورتوريكو', code: '1787', iso: 'pr' },
-            { name: 'قطر', code: '974', iso: 'qa' }, { name: 'روينيون', code: '262', iso: 're' },
-            { name: 'رومانيا', code: '40', iso: 'ro' }, { name: 'روسيا', code: '7', iso: 'ru' },
-            { name: 'رواندا', code: '250', iso: 'rw' }, { name: 'سانت بارث', code: '590', iso: 'bl' },
-            { name: 'سانت هيلينا', code: '290', iso: 'sh' }, { name: 'سانت كيتس ونيفيس', code: '1869', iso: 'kn' },
-            { name: 'سانت لوسيا', code: '1758', iso: 'lc' }, { name: 'سانت مارتن (الفرنسية)', code: '590', iso: 'mf' },
-            { name: 'سانت بيير وميكلون', code: '508', iso: 'pm' }, { name: 'سانت فنسنت والغرينادين', code: '1784', iso: 'vc' },
-            { name: 'ساموا', code: '685', iso: 'ws' }, { name: 'سان مارينو', code: '378', iso: 'sm' },
-            { name: 'ساو تومي وبرينسيبي', code: '239', iso: 'st' }, { name: 'السعودية', code: '966', iso: 'sa' },
-            { name: 'السنغال', code: '221', iso: 'sn' }, { name: 'صربيا', code: '381', iso: 'rs' },
-            { name: 'سيشل', code: '248', iso: 'sc' }, { name: 'سيراليون', code: '232', iso: 'sl' },
-            { name: 'سنغافورة', code: '65', iso: 'sg' }, { name: 'سينت مارتن (الهولندية)', code: '1721', iso: 'sx' },
-            { name: 'سلوفاكيا', code: '421', iso: 'sk' }, { name: 'سلوفينيا', code: '386', iso: 'si' },
-            { name: 'جزر سليمان', code: '677', iso: 'sb' }, { name: 'الصومال', code: '252', iso: 'so' },
-            { name: 'جنوب أفريقيا', code: '27', iso: 'za' }, { name: 'جورجيا الجنوبية', code: '500', iso: 'gs' },
-            { name: 'جنوب السودان', code: '211', iso: 'ss' }, { name: 'إسبانيا', code: '34', iso: 'es' },
-            { name: 'سريلانكا', code: '94', iso: 'lk' }, { name: 'السودان', code: '249', iso: 'sd' },
-            { name: 'سورينام', code: '597', iso: 'sr' }, { name: 'سفالبارد', code: '47', iso: 'sj' },
-            { name: 'سوازيلاند', code: '268', iso: 'sz' }, { name: 'السويد', code: '46', iso: 'se' },
-            { name: 'سويسرا', code: '41', iso: 'ch' }, { name: 'سوريا', code: '963', iso: 'sy' },
-            { name: 'تايوان', code: '886', iso: 'tw' }, { name: 'طاجيكستان', code: '992', iso: 'tj' },
-            { name: 'تنزانيا', code: '255', iso: 'tz' }, { name: 'تايلاند', code: '66', iso: 'th' },
-            { name: 'تيمور الشرقية', code: '670', iso: 'tl' }, { name: 'توغو', code: '228', iso: 'tg' },
-            { name: 'توكيلاو', code: '690', iso: 'tk' }, { name: 'تونغا', code: '676', iso: 'to' },
-            { name: 'ترينيداد وتوباغو', code: '1868', iso: 'tt' }, { name: 'تونس', code: '216', iso: 'tn' },
-            { name: 'تركيا', code: '90', iso: 'tr' }, { name: 'تركمانستان', code: '993', iso: 'tm' },
-            { name: 'جزر تركس وكايكوس', code: '1649', iso: 'tc' }, { name: 'توفالو', code: '688', iso: 'tv' },
-            { name: 'جزر العذراء الأمريكية', code: '1340', iso: 'vi' }, { name: 'أوغندا', code: '256', iso: 'ug' },
-            { name: 'أوكرانيا', code: '380', iso: 'ua' }, { name: 'الإمارات', code: '971', iso: 'ae' },
-            { name: 'المملكة المتحدة', code: '44', iso: 'gb' }, { name: 'الولايات المتحدة', code: '1', iso: 'us' },
-            { name: 'أوروغواي', code: '598', iso: 'uy' }, { name: 'أوزبكستان', code: '998', iso: 'uz' },
-            { name: 'فانواتو', code: '678', iso: 'vu' }, { name: 'فنزويلا', code: '58', iso: 've' },
-            { name: 'فيتنام', code: '84', iso: 'vn' }, { name: 'واليس وفوتونا', code: '681', iso: 'wf' },
-            { name: 'الصحراء الغربية', code: '212', iso: 'eh' }, { name: 'اليمن', code: '967', iso: 'ye' },
-            { name: 'زامبيا', code: '260', iso: 'zm' }, { name: 'زيمبابوي', code: '263', iso: 'zw' },
-            { name: 'آيسلندا', code: '354', iso: 'is' }, { name: 'كوسوفو', code: '383', iso: 'xk' }
-        ];
+        // ************** 1. وظائف الواجهة الرئيسية **************
+        
+        function selectCountry(name, code, iso) {
+            // تحديث الواجهة الأمامية
+            ELEMENTS.selectedCountryName.textContent = `${name} (+${code})`;
+            ELEMENTS.currentFlag.className = `flag-icon flag-icon-${iso.toLowerCase()}`;
+            ELEMENTS.codeInput.value = `+${code}`;
+            closeCountryModal();
+            ELEMENTS.phoneInput.focus(); 
+        }
 
-        // ************** وظائف المشاركة **************
+        function openWhatsApp() {
+            const code = ELEMENTS.codeInput.value.replace('+', '').trim(); 
+            // إزالة المسافات وعلامات + و -
+            const localNumber = ELEMENTS.phoneInput.value.trim().replace(/[\s+-]/g, '');
+
+            if (!code || code.length < 1 || !localNumber || localNumber.length < 6) {
+                alert('الرجاء إدخال رمز الدولة ورقم هاتف محلي صالح (لا يقل عن 6 أرقام).');
+                return;
+            }
+
+            // استخدام رابط الويب لتحسين التوافق
+            const fullNumber = code + localNumber;
+            const whatsappLink = 'https://wa.me/' + fullNumber;
+            window.open(whatsappLink, '_blank');
+        }
+
         function shareApp(platform) {
             let url = '';
             switch (platform) {
@@ -230,8 +227,8 @@
                     url = `https://wa.me/?text=${encodeURIComponent(SHARE_MESSAGE)}`;
                     break;
                 case 'messenger':
-                    const encodedLink = encodeURIComponent(APP_LINK);
-                    url = `fb-messenger://share?link=${encodedLink}&text=${encodeURIComponent(SHARE_MESSAGE)}`;
+                    // استخدام رابط الويب للمشاركة عبر Messenger (قد لا يعمل في كل التطبيقات)
+                    url = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(APP_LINK)}&app_id=1234567890&redirect_uri=${encodeURIComponent(APP_LINK)}`;
                     break;
                 case 'facebook':
                     url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(APP_LINK)}`;
@@ -241,144 +238,143 @@
             }
             window.open(url, '_blank', 'width=600,height=400');
         }
-
-        // ************** منطق الواتساب **************
-
-        function openWhatsApp() {
-            const code = codeInput.value.replace('+', '').trim(); 
-            const localNumber = phoneInput.value.trim().replace(/[\s+-]/g, '');
-
-            if (!code || code.length < 1) {
-                alert('الرجاء إدخال رمز الدولة ورقم الهاتف.');
-                return;
-            }
-            
-            if (!localNumber || localNumber.length < 6) {
-                alert('الرجاء إدخال رقم هاتف محلي صالح.');
-                return;
-            }
-
-            const fullNumber = code + localNumber;
-            const whatsappLink = 'https://wa.me/' + fullNumber;
-            window.open(whatsappLink, '_blank');
-        }
-
-        // ************** منطق القائمة المخصصة (Modal) **************
+        
+        // ************** 2. منطق القائمة المخصصة (Modal) **************
 
         function populateCountries() {
-            // فرز أبجدي بالاسم العربي لضمان ترتيب القائمة
-            countryData.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
-            countryListUl.innerHTML = '';
+            // فرز أبجدي بالاسم العربي (مع وضع السودان أولاً يدوياً)
+            countryData.sort((a, b) => {
+                if (a.name === 'السودان') return -1;
+                if (b.name === 'السودان') return 1;
+                return a.name.localeCompare(b.name, 'ar');
+            });
+            
+            // تحسين أداء إضافة العناصر باستخدام DocumentFragment
+            const fragment = document.createDocumentFragment();
+            
             countryData.forEach(country => {
                 const listItem = document.createElement('li');
                 listItem.className = 'country-item';
                 listItem.setAttribute('data-code', country.code);
                 listItem.setAttribute('data-iso', country.iso);
                 listItem.innerHTML = `
-                    <span class="flag-icon flag-icon-${country.iso.toLowerCase()} country-flag-modal"></span>
-                    ${country.name} 
-                    <span class="country-code-modal">(+${country.code})</span>
+                    <span class="flag-icon flag-icon-${country.iso.toLowerCase()} country-flag-modal" aria-hidden="true"></span>
+                    <span class="country-name-modal">${country.name}</span>
+                    <span class="country-code-modal" dir="ltr">(+${country.code})</span>
                 `;
+                // استخدام دالة selectCountry مباشرة عند النقر
                 listItem.onclick = () => selectCountry(country.name, country.code, country.iso);
-                countryListUl.appendChild(listItem);
+                fragment.appendChild(listItem);
             });
+            
+            ELEMENTS.countryListUl.appendChild(fragment);
         }
         
         function filterCountries(searchTerm) {
             const filter = searchTerm.toUpperCase().trim();
-            const items = countryListUl.getElementsByTagName('li');
+            const items = ELEMENTS.countryListUl.getElementsByTagName('li');
             
-            Array.from(items).forEach(item => {
+            // استخدام حلقة for العادية بدلاً من Array.from().forEach لسرعة التنفيذ
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                // البحث في الاسم والرمز معاً
                 const text = item.textContent || item.innerText;
                 if (text.toUpperCase().includes(filter)) {
                     item.style.display = "";
                 } else {
                     item.style.display = "none";
                 }
-            });
+            }
         }
 
         function openCountryModal() {
-            // يعرض النافذة ويجعلها ثابتة
-            countryModal.style.display = "flex";
-            document.body.style.overflow = "hidden"; // منع تمرير الخلفية
-            // التركيز على حقل البحث
+            ELEMENTS.countryModal.style.display = "flex";
+            document.body.classList.add('modal-open'); // إضافة كلاس للتحكم في تمرير الخلفية
+            
+            // تأخير التركيز لضمان أن الـ Modal قد ظهر تماماً
             setTimeout(() => {
-                document.getElementById('modalSearchInput').focus();
-            }, 100);
+                ELEMENTS.modalSearchInput.focus();
+            }, 10);
         }
 
         function closeCountryModal() {
-            countryModal.style.display = "none";
-            document.body.style.overflow = "auto";
+            ELEMENTS.countryModal.style.display = "none";
+            document.body.classList.remove('modal-open');
             // مسح حقل البحث وإعادة فلترة القائمة
-            document.getElementById('modalSearchInput').value = '';
+            ELEMENTS.modalSearchInput.value = '';
             filterCountries('');
         }
-
-        function selectCountry(name, code, iso) {
-            // تحديث الواجهة الأمامية
-            selectedCountryName.textContent = `${name} (+${code})`;
-            currentFlagSpan.className = `flag-icon flag-icon-${iso.toLowerCase()}`;
-            codeInput.value = `+${code}`;
-            closeCountryModal();
-            phoneInput.focus(); // نقل التركيز إلى حقل الرقم
-        }
-
-        // ************** منطق التثبيت (PWA) **************
         
-        let deferredPrompt; 
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                // إظهار زر التثبيت فوراً إذا لم يكن مثبتاً
-                // installButton.style.display = 'block'; 
-            });
-        }
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e; 
-            installButton.style.display = 'block'; 
-        });
-        installButton.addEventListener('click', (e) => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        installButton.style.display = 'none'; 
-                    }
-                    deferredPrompt = null; 
-                });
-            } else {
-                alert('لتثبيت التطبيق: افتح قائمة المتصفح (⋮) واختر "التثبيت" أو "إضافة إلى الشاشة الرئيسية".');
+        // إغلاق الـ Modal عند الضغط على مفتاح ESC
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && ELEMENTS.countryModal.style.display === 'flex') {
+                closeCountryModal();
             }
         });
         
-        // ************** التشغيل عند التحميل **************
-
+        // ************** 3. منطق تثبيت الشاشة والأداء (PWA & Fixes) **************
+        
         function initializeApp() {
-            // ** الحل الجذري لمشكلة ارتفاع الشاشة على الهواتف (V/H Fix) **
+            // ** الحل النهائي لمنع اهتزاز الشاشة على الجوال **
             function setVhProperty() {
+                // حساب 1% من ارتفاع النافذة المرئي
                 let vh = window.innerHeight * 0.01;
+                // تطبيقها كخاصية CSS مخصصة
                 document.documentElement.style.setProperty('--vh', `${vh}px`);
+                // تحسين الأداء: استخدام translateZ لتحفيز تسريع الأجهزة
+                document.getElementById('pageWrapper').style.transform = 'translateZ(0)';
             }
+            // تطبيقها عند التحميل و عند تغيير حجم النافذة (الدوران مثلاً)
             setVhProperty();
             window.addEventListener('resize', setVhProperty);
             
-            // ملء قائمة الدول المخصصة وتعيين الافتراضي
+            // ملء قائمة الدول المخصصة وتعيين الافتراضي (السودان)
             populateCountries();
             selectCountry('السودان', '249', 'sd');
+            
+            // تهيئة PWA
+            setupPWA();
         }
-
-        initializeApp();
         
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                // يرجى تعديل المسار إذا كان ملف sw.js في مسار مختلف
+        let deferredPrompt; 
+        function setupPWA() {
+            if ('serviceWorker' in navigator) {
+                // تسجيل Service Worker
                 navigator.serviceWorker.register('/zool/sw.js', { scope: '/zool/' }) 
-                    .then((registration) => { console.log('ServiceWorker registration successful with scope: ', registration.scope); })
-                    .catch((err) => { console.log('ServiceWorker registration failed: ', err); });
+                    .then((registration) => { console.log('SW registration successful.'); })
+                    .catch((err) => { console.log('SW registration failed:', err); });
+            }
+            
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e; 
+                ELEMENTS.installButton.style.display = 'block'; 
+            });
+
+            ELEMENTS.installButton.addEventListener('click', () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            ELEMENTS.installButton.style.display = 'none'; 
+                        }
+                        deferredPrompt = null; 
+                    });
+                } else {
+                    alert('لتثبيت التطبيق: افتح قائمة المتصفح (⋮) واختر "التثبيت" أو "إضافة إلى الشاشة الرئيسية".');
+                }
             });
         }
+
+        // تشغيل كل شيء عند اكتمال تحميل الصفحة
+        window.addEventListener('load', initializeApp);
+
+        // وضع الدوال في النطاق العام للوصول إليها من HTML (أقل نظافة ولكن ضروري لـ onclick)
+        window.openCountryModal = openCountryModal;
+        window.closeCountryModal = closeCountryModal;
+        window.filterCountries = filterCountries;
+        window.openWhatsApp = openWhatsApp;
+        window.shareApp = shareApp;
     </script>
 </body>
 </html>
