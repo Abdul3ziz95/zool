@@ -207,12 +207,13 @@ COUNTRY_DATA.forEach(country => {
 });
 
 
-// ************** كائن الترجمة (محدث بالرسائل الجديدة) **************
+// ************** كائن الترجمة (محدث بالرسائل الجديدة ومفتاح الأيقونة) **************
 const TRANSLATIONS = {
     ar: {
         title: "دردشة مباشرة",
         description: "أسرع وأذكى طريقة للتواصل مباشرة عبر واتساب.",
         install: "📲 تثبيت التطبيق",
+        install_icon: "تثبيت", // مفتاح جديد
         country_label: "اختر الدولة أو ابحث عنها:",
         country_placeholder: "ابحث عن الدولة (مثال: السودان (+249))",
         code_placeholder: "رمز الدولة",
@@ -230,6 +231,7 @@ const TRANSLATIONS = {
         title: "Direct WhatsApp Chat",
         description: "The fastest and smartest way to start a direct WhatsApp conversation.",
         install: "📲 Install App",
+        install_icon: "Install", // مفتاح جديد
         country_label: "Select or search for a country:",
         country_placeholder: "Search for Country (Example: Sudan (+249))",
         code_placeholder: "Code",
@@ -240,9 +242,7 @@ const TRANSLATIONS = {
         copyright: "All rights reserved © 2025. <span class='owner-name'>Abdul3ziz95</span>",
         alert_msg: "Please enter a valid local phone number (at least 6 digits) and country code.",
         initial_country: "Sudan (+249)",
-        // تم تحديث رسالة المشاركة الإنجليزية
         share_message: 'Try WhatsApp Instant Messenger! The fastest way to start a conversation without saving the number. Link: ' + APP_LINK,
-        // تم تحديث الرسالة التلقائية الإنجليزية
         initial_whatsapp_msg: "Hello"
     }
 };
@@ -264,36 +264,47 @@ let deferredPrompt;
 // ************** 1. وظائف التحكم في الدولة **************
 
 /**
- * يملأ قائمة datalist بأسماء الدول بناءً على اللغة المحددة (مهم للبحث).
- * @param {string} lang - اللغة المراد استخدامها ('ar' أو 'en').
+ * يملأ قائمة datalist بجميع أسماء الدول باللغتين للبحث المزدوج.
  */
-function populateDatalist(lang) {
-    const langKey = lang === 'ar' ? 'name_ar' : 'name_en';
+function populateDatalist() {
     countryOptionsList.innerHTML = '';
+    const uniqueValues = new Set();
+    
     COUNTRY_DATA.forEach(country => { 
-        const option = document.createElement('option');
-        // استخدام اسم الدولة باللغة المناسبة
-        option.value = `${country[langKey]} (+${country.code})`;
-        countryOptionsList.appendChild(option);
+        // 1. إضافة الاسم العربي (+ الرمز)
+        const arValue = `${country.name_ar} (+${country.code})`;
+        if (!uniqueValues.has(arValue)) {
+             const optionAr = document.createElement('option');
+             optionAr.value = arValue;
+             countryOptionsList.appendChild(optionAr);
+             uniqueValues.add(arValue);
+        }
+
+        // 2. إضافة الاسم الإنجليزي (+ الرمز)
+        const enValue = `${country.name_en} (+${country.code})`;
+         if (!uniqueValues.has(enValue)) {
+             const optionEn = document.createElement('option');
+             optionEn.value = enValue;
+             countryOptionsList.appendChild(optionEn);
+             uniqueValues.add(enValue);
+        }
     });
 }
 
 /**
- * تحديث رمز الدولة والعلم عند اختيار الدولة من قائمة البحث.
+ * تحديث رمز الدولة والعلم عند اختيار الدولة من قائمة البحث أو إدخال نص.
  */
 function updateCodeFromCountry(selectedValue) {
     if (selectedValue.trim() === '') return;
-    const match = selectedValue.match(/\((\+?)(\d+)\)/); // يستخرج الرقم بين الأقواس
+    const match = selectedValue.match(/\((\+?)(\d+)\)/); 
     const code = match ? match[2] : '';
 
     if (code) {
         codeInput.value = `+${code}`;
         updateFlag(code);
         
-        // حفظ القيمة المحدثة باللغة الحالية
-        const country = codeMap[code];
-        const langKey = currentLang === 'ar' ? 'name_ar' : 'name_en';
-        savedCountryValue = `${country[langKey]} (+${country.code})`;
+        // حفظ القيمة المحدثة (باللغة التي تم اختيارها)
+        savedCountryValue = selectedValue;
     }
 }
 
@@ -302,26 +313,35 @@ function updateCodeFromCountry(selectedValue) {
  */
 function updateCountryFromCode(inputValue) {
     let code = inputValue.replace('+', '').trim();
+    const langKey = currentLang === 'ar' ? 'name_ar' : 'name_en'; 
+    
+    // إصلاح مشكلة العلم الثابت عند المسح
+    if (!code || codeInput.value === '+') {
+         codeInput.value = '+';
+         // إعادة تعيين العلم والقيمة عند مسح الرمز بالكامل
+         currentFlagSpan.className = 'flag-icon flag-icon-un'; // استخدام علم افتراضي
+         countryInput.value = TRANSLATIONS[currentLang].country_placeholder;
+         savedCountryValue = TRANSLATIONS[currentLang].country_placeholder;
+         return;
+    }
     
     // يضمن وجود علامة + في بداية المدخل
-    if (!inputValue.startsWith('+') && code) {
+    if (!inputValue.startsWith('+')) {
          codeInput.value = `+${code}`;
-    } else if (!code && codeInput.value === '+') {
-         codeInput.value = '+'; // يحافظ على علامة + إذا كان فارغاً
     }
 
     code = code.replace(/^0+/, ''); 
-    const langKey = currentLang === 'ar' ? 'name_ar' : 'name_en'; 
 
     if (codeMap[code]) {
         updateFlag(code);
         const country = codeMap[code];
         // تحديث حقل الدولة بالاسم باللغة الحالية
-        countryInput.value = `${country[langKey]} (+${country.code})`; 
-        savedCountryValue = countryInput.value;
+        const countryName = `${country[langKey]} (+${country.code})`;
+        countryInput.value = countryName; 
+        savedCountryValue = countryName;
     } else {
-        // إذا لم يتم العثور على تطابق، يعرض علم افتراضي (السودان هنا)
-        currentFlagSpan.className = 'flag-icon flag-icon-sd'; 
+        // علم افتراضي إذا لم يتم العثور على تطابق
+        currentFlagSpan.className = 'flag-icon flag-icon-un'; 
     }
 }
 
@@ -333,7 +353,7 @@ function updateFlag(code) {
     if (country) {
         currentFlagSpan.className = `flag-icon flag-icon-${country.iso}`;
     } else {
-        // علم افتراضي إذا لم يتم العثور على رمز الدولة (مثل علم الأمم المتحدة 'un')
+        // علم افتراضي
         currentFlagSpan.className = 'flag-icon flag-icon-un'; 
     }
 }
@@ -342,27 +362,39 @@ function updateFlag(code) {
  * يستعيد القيمة المحفوظة لمدخل الدولة عند فقدان التركيز (blur) إذا كان فارغاً.
  */
 function restoreCountryValue() {
-    if (countryInput.value.trim() === '') {
-        countryInput.value = savedCountryValue;
+    // يجب استعادة اسم الدولة باللغة الحالية
+    const code = codeInput.value.replace('+', '').trim();
+    const langKey = currentLang === 'ar' ? 'name_ar' : 'name_en'; 
+    
+    if (codeMap[code]) {
+        const country = codeMap[code];
+        const countryName = `${country[langKey]} (+${country.code})`;
+        countryInput.value = countryName;
+        savedCountryValue = countryName;
+    } else if (countryInput.value.trim() === '' || countryInput.value.startsWith('Search for Country') || countryInput.value.startsWith('ابحث عن الدولة')) {
+        // إذا كان المدخل فارغاً أو يحتوي على النص المبدئي، استعد النص المبدئي باللغة الحالية
+         countryInput.value = TRANSLATIONS[currentLang].country_placeholder;
+         savedCountryValue = TRANSLATIONS[currentLang].country_placeholder;
     }
 }
 
-// ************** 2. وظيفة التحديد التلقائي عبر IP (مُعاد تفعيلها) **************
+
+// ************** 2. وظيفة التحديد التلقائي عبر IP (تم إرجاع الخدمة السابقة) **************
 
 async function setCountryAuto() {
-    let code = '249'; 
-    let iso = 'sd';
+    let code = '249'; // الافتراضي
+    let iso = 'sd'; // الافتراضي
     
     try {
-        // استخدام خدمة IP أكثر استقراراً
-        const response = await fetch('https://ipapi.co/json/');
+        // العودة إلى الخدمة المجانية السابقة
+        const response = await fetch('http://ip-api.com/json');
         const data = await response.json();
         
-        if (data.country_calling_code && data.country_code) {
-            let potentialCode = data.country_calling_code.replace('+', '');
-            if (codeMap[potentialCode]) {
-                 code = potentialCode;
-                 iso = data.country_code.toLowerCase();
+        if (data.status === 'success' && data.countryCode) {
+            let potentialIso = data.countryCode.toLowerCase();
+            if (isoMap[potentialIso]) {
+                 iso = potentialIso;
+                 code = isoMap[iso].code; // الحصول على الرمز الصحيح من بياناتنا
             }
         }
     } catch (e) {
@@ -376,8 +408,9 @@ async function setCountryAuto() {
     currentFlagSpan.className = `flag-icon flag-icon-${iso}`;
     
     // تعيين اسم الدولة باللغة الافتراضية
-    countryInput.value = `${country[langKey]} (+${country.code})`;
-    savedCountryValue = countryInput.value;
+    const countryName = `${country[langKey]} (+${country.code})`;
+    countryInput.value = countryName;
+    savedCountryValue = countryName;
 }
 
 
@@ -444,6 +477,12 @@ function toggleLanguage() {
     document.querySelectorAll('[data-key]').forEach(element => {
         const key = element.getAttribute('data-key');
         const text = langData[key];
+        
+        if (key === 'install_icon') {
+            // تحديث النص داخل زر التثبيت
+            element.innerHTML = `<i class="fas fa-download"></i> ${text}`;
+            return;
+        }
 
         if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
             element.placeholder = text;
@@ -456,20 +495,10 @@ function toggleLanguage() {
         }
     });
     
-    // 3. تحديث قائمة الدول (لتسهيل البحث باللغة الجديدة)
-    populateDatalist(currentLang);
-    
-    // 4. تحديث مظهر زر التبديل
+    // 3. تحديث مظهر زر التبديل
     langToggleBtn.textContent = currentLang === 'ar' ? 'English' : 'العربية';
     
-    // 5. تحديث قيمة مدخل الدولة للتطابق مع اللغة الجديدة
-    const countryToRestore = COUNTRY_DATA.find(c => c.code === codeInput.value.replace('+', ''));
-    if (countryToRestore) {
-        const langKey = currentLang === 'ar' ? 'name_ar' : 'name_en';
-        savedCountryValue = `${countryToRestore[langKey]} (+${countryToRestore.code})`;
-    } else {
-        savedCountryValue = langData.initial_country; 
-    }
+    // 4. تحديث قيمة مدخل الدولة للتطابق مع اللغة الجديدة
     restoreCountryValue(); 
 }
 
@@ -485,8 +514,8 @@ function initializeApp() {
     setVhProperty();
     window.addEventListener('resize', setVhProperty);
     
-    // تعبئة قائمة الدول باللغة الافتراضية
-    populateDatalist(currentLang);
+    // تعبئة قائمة الدول باللغتين للبحث المزدوج
+    populateDatalist(); 
     
     // تنفيذ التحديد التلقائي
     setCountryAuto();
@@ -499,6 +528,11 @@ function initializeApp() {
         const key = element.getAttribute('data-key');
         const text = langData[key];
         
+        if (key === 'install_icon') {
+            element.innerHTML = `<i class="fas fa-download"></i> ${text}`;
+            return;
+        }
+
         if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
             element.placeholder = text;
         } else if (element.id === 'whatsappButton') {
@@ -520,7 +554,7 @@ function initializeApp() {
  * إعداد وظائف PWA لزر التثبيت.
  */
 function setupPWA() {
-     if ('serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
             for(let registration of registrations) {
                 if(registration.scope.includes('/zol/')) { 
@@ -537,7 +571,7 @@ function setupPWA() {
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e; 
-        installButton.style.display = 'block'; 
+        installButton.style.display = 'flex'; // تغيير إلى flex للتنسيق الجديد
     });
 
     // يخفي الزر عند النقر والتثبيت
