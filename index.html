@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -15,13 +16,16 @@
 </head>
 <body>
     
+    <div class="header-controls">
+        <button id="langToggleBtn" onclick="toggleLanguage()">English</button>
+        <button id="installButton" class="install-prompt-button" style="display: none;" data-key="install_icon">
+            </button>
+    </div>
+    
     <div class="page-wrapper" id="pageWrapper"> 
         
         <h1 class="app-heading" data-key="title"></h1>
         <p class="description" data-key="description"></p>
-
-        <button id="installButton" class="install-prompt-button" style="display: none;" data-key="install">
-        </button>
         
         <div class="main-form">
             
@@ -39,7 +43,7 @@
                 >
                 
                 <datalist id="country-options">
-                </datalist>
+                    </datalist>
             </div>
 
             <div class="phone-input-container">
@@ -72,8 +76,6 @@
                 <button class="share-btn messenger" onclick="shareApp('messenger')"><i class="fab fa-facebook-messenger"></i></button>
                 <button class="share-btn whatsapp-share" onclick="shareApp('whatsapp')"><i class="fab fa-whatsapp"></i></button>
             </div>
-            
-            <button id="langToggleBtn" onclick="toggleLanguage()">English</button>
         </div>
         
         <footer class="app-footer">
@@ -87,4 +89,3 @@
     
 </body>
 </html>
-
