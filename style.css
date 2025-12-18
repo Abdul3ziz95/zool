@@ -18,23 +18,23 @@ body {
     width: 100%;
     max-width: 450px;
     background-color: #ffffff;
-    padding: 35px;
+    padding: 30px; /* تقليل الهوامش الداخلية قليلاً */
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* ظل خفيف وعصري */
-    transition: transform 0.3s ease;
 }
 
 .app-heading {
-    color: #25D366; /* لون واتساب الأخضر */
+    color: #25D366; 
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     font-weight: 700;
+    font-size: 1.8rem;
 }
 
 .description {
     text-align: center;
     color: #666;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     font-size: 0.95rem;
 }
 
@@ -44,7 +44,7 @@ body {
     width: 100%;
     padding: 12px;
     margin-bottom: 20px;
-    background-color: #4A90E2; /* لون أزرق جذاب للتثبيت */
+    background-color: #4A90E2; 
     color: white;
     border: none;
     border-radius: 8px;
@@ -55,18 +55,18 @@ body {
 
 .install-prompt-button:hover {
     background-color: #3A7CC7;
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 /* ------------------ حقول الإدخال والقائمة ------------------ */
 
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* تقليل الفراغ */
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 6px; /* تقليل الفراغ */
     font-size: 0.9rem;
     color: #555;
     font-weight: 700;
@@ -75,10 +75,10 @@ body {
 select {
     width: 100%;
     padding: 12px 15px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd; /* لون أفتح للحدود */
     border-radius: 8px;
     font-size: 1rem;
-    appearance: none; /* لإزالة السهم الافتراضي */
+    appearance: none; 
     background-color: #f9f9f9;
     background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="gray"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>');
     background-repeat: no-repeat;
@@ -98,17 +98,17 @@ input[type="tel"]:focus {
 .phone-input-container {
     display: flex;
     gap: 10px;
-    margin-bottom: 25px;
+    margin-bottom: 20px; /* تقليل الفراغ */
 }
 
 .country-code-wrapper {
     display: flex;
     align-items: center;
     background-color: #f9f9f9;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 0 10px;
-    flex-basis: 120px; /* حجم ثابت لحقل الرمز */
+    padding: 0 5px; /* تقليل الهامش الأفقي */
+    flex-basis: 110px; /* حجم ثابت أصغر لحقل الرمز */
     flex-shrink: 0;
 }
 
@@ -126,26 +126,27 @@ input[type="tel"]:focus {
 #phoneInput {
     flex-grow: 1;
     padding: 12px 15px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 1rem;
 }
 
 .flag-icon {
     font-size: 1.5rem;
-    margin-left: 8px;
+    margin-left: 5px; /* تقليل الهامش */
+    margin-right: 5px; /* إضافة هامش لليمين لتحسين المظهر */
 }
 
 /* ------------------ زر بدء المحادثة ------------------ */
 
 button:not(.install-prompt-button) {
     width: 100%;
-    padding: 15px;
+    padding: 14px; /* تقليل حجم الزر قليلاً */
     background-color: #25D366;
     color: white;
     border: none;
     border-radius: 8px;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 700;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.1s;
@@ -156,7 +157,7 @@ button:not(.install-prompt-button) {
 
 button:not(.install-prompt-button):hover {
     background-color: #1FAF59;
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .icon {
@@ -176,21 +177,11 @@ button:not(.install-prompt-button):hover {
 
 .app-footer {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 25px; /* تقليل الفراغ */
     font-size: 0.8rem;
     color: #999;
 }
 
 .app-footer p {
-    margin: 5px 0;
-}
-
-.contact-link {
-    color: #25D366;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.contact-link:hover {
-    color: #1FAF59;
+    margin: 3px 0;
 }
