@@ -1,23 +1,31 @@
 
 /* ------------------ Base & Layout (شاشة ثابتة 100%، بدون تمرير) ------------------ */
+/* تثبيت ارتفاع وعرض المتصفح بالكامل */
+html, body {
+    height: 100%; 
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: 'Cairo', sans-serif;
     direction: rtl;
     text-align: right;
     background: linear-gradient(135deg, #e6fff3 0%, #f0f2f5 100%); 
     color: #333;
-    margin: 0;
-    padding: 0;
+    
     box-sizing: border-box;
     
     /* ***** تثبيت الشاشة ومنع التمرير ***** */
-    height: 100vh;
+    height: 100vh; 
     width: 100vw;
     overflow: hidden; 
     
     display: flex;
     justify-content: center;
-    align-items: center; 
+    /* التبديل من align-items: center إلى flex-start لضمان أن المحتوى يبدأ من الأعلى */
+    align-items: flex-start; 
 }
 
 .page-wrapper {
@@ -30,7 +38,8 @@ body {
     justify-content: space-between; 
     align-items: center; 
     
-    padding: 20px 10px; 
+    /* تقليل الـ Padding العلوي إلى الحد الأدنى لإلغاء الفراغ */
+    padding: 10px 10px 20px 10px; 
     box-sizing: border-box;
     overflow-y: auto; 
 }
@@ -66,7 +75,7 @@ body {
 .description {
     text-align: center;
     color: #777;
-    margin-bottom: 30px; /* مسافة كافية قبل عناصر الإدخال */
+    margin-bottom: 30px; 
     font-size: 0.9rem;
     line-height: 1.6;
 }
@@ -75,8 +84,24 @@ body {
 
 .input-group { margin-bottom: 20px; }
 .input-group label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: #555; font-weight: 600; }
-select { width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 10px; font-size: 1rem; background-color: #f9f9f9; appearance: none; cursor: pointer; background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="gray"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>'); background-repeat: no-repeat; background-position: left 15px center; transition: all 0.2s;}
-select:focus,#phoneInput:focus { border-color: #25D366; outline: none; box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.25); }
+
+/* تنسيق حقل البحث الجديد (Datalist Input) */
+#countrySearch { 
+    width: 100%; 
+    padding: 12px 15px; 
+    border: 1px solid #e0e0e0; 
+    border-radius: 10px; 
+    font-size: 1rem; 
+    background-color: #f9f9f9; 
+    transition: all 0.2s;
+}
+
+#countrySearch:focus, #phoneInput:focus { 
+    border-color: #25D366; 
+    outline: none; 
+    box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.25); 
+}
+
 
 .phone-input-container { display: flex; gap: 8px; margin-bottom: 25px;}
 .country-code-wrapper { display: flex; align-items: center; background-color: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 10px; padding: 0 8px; flex-basis: 110px; flex-shrink: 0; transition: all 0.2s;}
@@ -89,7 +114,16 @@ select:focus,#phoneInput:focus { border-color: #25D366; outline: none; box-shado
 button:not(.install-prompt-button) { width: 100%; padding: 16px; background-color: #25D366; color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4); transition: all 0.2s; display: flex; align-items: center; justify-content: center;}
 button:not(.install-prompt-button):hover { background-color: #1FAF59; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37, 211, 102, 0.5);}
 .icon { width: 20px; height: 20px; margin-left: 10px;}
+
+/* ** تنسيق التنبيه الواضح والبارز ** */
 .note { text-align: center; font-size: 0.8rem; color: #999; margin-top: 15px;}
+.prominent-note {
+    font-size: 0.9rem;
+    font-weight: 700; 
+    color: #FF6347; 
+    padding: 5px 0;
+    border-radius: 5px;
+}
 
 
 /* ------------------ قسم أيقونات المشاركة ------------------ */
@@ -111,8 +145,8 @@ button:not(.install-prompt-button):hover { background-color: #1FAF59; transform:
 
 .share-icons {
     display: flex;
-    justify-content: center;
-    gap: 15px;
+    justify-content: center; 
+    gap: 15px; 
 }
 
 .share-btn {
@@ -125,6 +159,10 @@ button:not(.install-prompt-button):hover { background-color: #1FAF59; transform:
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s, opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; 
 }
 
 .share-btn:hover {
@@ -155,8 +193,8 @@ button:not(.install-prompt-button):hover { background-color: #1FAF59; transform:
     color: #075E54;
     text-decoration: none;
     transition: color 0.3s;
-    font-weight: 800; /* أثقل خط */
-    font-size: 1.0rem; /* حجم أكبر قليلاً */
+    font-weight: 800; 
+    font-size: 1.0rem; 
     display: block;
     margin-bottom: 10px;
 }
@@ -181,7 +219,13 @@ button:not(.install-prompt-button):hover { background-color: #1FAF59; transform:
     .container {
         padding: 40px;
     }
+    /* إعادة توسيط المحتوى في الشاشات الكبيرة للحفاظ على المظهر الجمالي */
+    body {
+        align-items: center; 
+    }
     .page-wrapper {
         padding: 40px 10px;
+        /* السماح بالتمرير إذا كان المحتوى أكبر من ارتفاع الشاشة */
+        overflow-y: auto; 
     }
 }
