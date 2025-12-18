@@ -1,3 +1,4 @@
+
 /* ------------------ Base & Layout (شاشة ثابتة 100%، بدون تمرير) ------------------ */
 
 * {
@@ -25,8 +26,7 @@ body {
     left: 0;
     
     font-family: 'Cairo', sans-serif;
-    direction: rtl;
-    text-align: right;
+    /* direction و text-align يتم التحكم بهما الآن من وسم HTML */
     background: linear-gradient(135deg, #f0f2f5 0%, #e6fff3 100%); 
     color: #333;
     
@@ -43,123 +43,235 @@ body {
     max-height: 100%; 
     
     background-color: #ffffff;
-    box-shadow: 0 0 40px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+    border-radius: 25px; 
     
-    padding: 30px 20px; 
+    padding: 30px 25px; 
     
+    /* تصميم flexbox لضمان بقاء العنوان والمحتوى في الأعلى والفوتر في الأسفل */
     display: flex;
     flex-direction: column;
+    justify-content: flex-start; 
+    align-items: center; 
     
-    /* *** السماح بالتمرير الداخلي فقط إذا كان المحتوى طويلاً ليظهر كل شيء *** */
     overflow-y: auto; 
-    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; 
+}
+
+/* ------------------ Header & Description ------------------ */
+.app-heading {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #075E54; /* لون الواتساب الأخضر */
+    margin-bottom: 5px;
+}
+.description {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+/* ------------------ PWA Install Button ------------------ */
+.install-prompt-button {
+    background-color: #f0f0f0;
+    color: #075E54;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    transition: background-color 0.2s;
+}
+.install-prompt-button:hover {
+    background-color: #e0e0e0;
+}
+
+
+/* ------------------ زر تبديل اللغة (تصميم متطور وجذاب) ------------------ */
+#langToggleBtn {
+    /* الموضع: ثابت في الزاوية العلوية (يتبع الاتجاه RTL/LTR) */
+    position: fixed;
+    top: 20px; 
+    /* ثابت في الجهة المقابلة للاتجاه */
+    inset-inline-end: 20px; 
     
-    transform: translateZ(0); 
+    z-index: 1000;
+    
+    /* الشكل والحجم */
+    padding: 8px 15px; 
+    min-width: 90px;
+    
+    /* الألوان والمظهر */
+    background: linear-gradient(145deg, #f7f7f7, #e0e0e0); /* تدرج لوني خفيف */
+    color: #075E54; /* لون الواتساب ليتناسب مع التطبيق */
+    border: none;
+    border-radius: 20px; /* زوايا مدورة أكثر عصرية */
+    
+    /* الظل البارز (Neumorphism / Soft Shadow) */
+    box-shadow: 
+        3px 3px 6px #b8b8b8,  /* ظل سفلي يمين غامق */
+        -3px -3px 6px #ffffff; /* ظل علوي يسار فاتح لإعطاء عمق */
+    
+    /* النص والخط */
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 800; /* خط ثقيل لزيادة الوضوح */
+    letter-spacing: 0.5px;
+    
+    /* المؤثرات والتفاعل */
+    transition: all 0.2s ease-in-out; 
+    
+    /* منع تحديد النص */
+    user-select: none;
 }
 
-/* إخفاء شريط التمرير (الداخلي) */
-.page-wrapper::-webkit-scrollbar { display: none; }
-.page-wrapper { -ms-overflow-style: none; scrollbar-width: none; }
-
-
-/* ------------------ Typography & Headings ------------------ */
-
-.app-heading { color: #075E54; text-align: center; margin-bottom: 5px; font-weight: 800; font-size: clamp(1.8rem, 5vw, 2.2rem); }
-.description { text-align: center; color: #777; margin-bottom: 30px; font-size: 0.95rem;}
-
-
-/* ------------------ Form Elements & Inputs ------------------ */
-
-.main-form { width: 100%; }
-.input-group { margin-bottom: 20px; } 
-.input-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #555; font-weight: 600; }
-
-#countryInput, #phoneInput { 
-    width: 100%; 
-    padding: 12px 15px; 
-    border: 2px solid #ddd; 
-    border-radius: 12px; 
-    font-size: 1.0rem; 
-    transition: all 0.2s;
-    background-color: #f7f7f7;
-    color: #333;
-    font-family: 'Cairo', sans-serif;
-    resize: vertical;
+/* مؤثر عند الضغط (لإعطاء إحساس ثلاثي الأبعاد بالضغط) */
+#langToggleBtn:active {
+    box-shadow: 
+        inset 1px 1px 2px #b8b8b8,  /* ظل داخلي للضغط */
+        inset -1px -1px 2px #ffffff;
+    transform: scale(0.98); /* تصغير خفيف لإحساس الضغط */
+    background: #e0e0e0;
 }
-#countryInput {
-    background-color: #ffffff; 
+
+/* مؤثر عند مرور الفأرة */
+#langToggleBtn:hover {
+    background: #e6e6e6; 
+}
+
+
+/* ------------------ Form Styles ------------------ */
+.main-form {
+    width: 100%;
+    margin-bottom: 25px;
+}
+.input-group {
+    margin-bottom: 15px;
+}
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 8px;
     font-weight: 600;
 }
-#phoneInput {
-     background-color: #ffffff;
+
+/* تنسيق مدخلات الدولة والرقم */
+.input-group input,
+.phone-input-container input {
+    width: 100%;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 15px; 
+    background-color: #f7f7f7;
+    font-size: 1rem;
+    font-family: 'Cairo', sans-serif;
+    color: #333;
+    transition: box-shadow 0.3s;
+    box-shadow: inset 2px 2px 5px #e0e0e0, inset -5px -5px 10px #ffffff; /* ظل داخلي ناعم */
+}
+.input-group input:focus,
+.phone-input-container input:focus {
+    outline: none;
+    box-shadow: inset 1px 1px 3px #ccc, inset -1px -1px 3px #fff;
+    background-color: #fff;
+}
+.input-group input::placeholder,
+.phone-input-container input::placeholder {
+    color: #aaa;
 }
 
-#countryInput:focus, #phoneInput:focus { 
-    border-color: #25D366; 
-    outline: none; 
-    background-color: #ffffff;
-    box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.2); 
+/* تنسيق مدخلات الهاتف (الكود والرقم المحلي) */
+.phone-input-container {
+    display: flex;
+    gap: 10px;
 }
-
-
-.phone-input-container { display: flex; gap: 10px; margin-bottom: 25px;}
-
-.country-code-wrapper { 
-    display: flex; 
-    align-items: center; 
-    background-color: #f7f7f7; 
-    border: 2px solid #ddd; 
-    border-radius: 12px; 
-    padding: 0 10px; 
-    flex-basis: 120px; 
-    flex-shrink: 0; 
-    transition: border-color 0.2s;
+.country-code-wrapper {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    background-color: #f7f7f7;
+    border-radius: 15px; 
+    box-shadow: inset 2px 2px 5px #e0e0e0, inset -5px -5px 10px #ffffff;
+    padding: 0 15px;
+    max-width: 120px; 
+    width: 100%;
 }
-
-#codeInput { 
-    border: none; 
-    background: transparent; 
+.country-code-wrapper input {
+    background: transparent;
     padding: 12px 0; 
-    text-align: right; 
-    width: 100%; 
-    font-size: 1.05rem; 
+    /* إزالة الظل الداخلي ليظهر بسلاسة مع الـ wrapper */
+    box-shadow: none; 
+    text-align: right;
     font-weight: 700; 
     color: #075E54;
+    max-width: 60px;
 }
-.country-code-wrapper:focus-within { 
-    border-color: #25D366; 
-    box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.2); 
-    background-color: #ffffff;
+.phone-input-container input:last-child {
+    flex-grow: 1;
 }
 
-.flag-icon { font-size: 1.4rem; margin-left: 8px; min-width: 24px;}
+
+/* ------------------ أيقونة العلم والاتجاهات ------------------ */
+
+.flag-icon { 
+    font-size: 1.4rem; 
+    min-width: 24px;
+    transition: margin 0.2s; /* إضافة انتقال للهامش عند تبديل الاتجاه */
+}
+
+/* الأنماط التي تعتمد على الاتجاه (لضمان الثبات) */
+
+/* محاذاة النص في مدخلات رمز الدولة */
+[dir="rtl"] #codeInput { text-align: right; }
+[dir="ltr"] #codeInput { text-align: left; }
+
+/* موضع أيقونة العلم (يتبع الاتجاه) */
+[dir="rtl"] .flag-icon { margin-left: 8px; margin-right: 0;}
+[dir="ltr"] .flag-icon { margin-right: 8px; margin-left: 0;}
 
 
-/* ------------------ Main Button & Notes ------------------ */
+/* ------------------ WhatsApp Button ------------------ */
 
-.install-prompt-button { width: 100%; padding: 14px; margin-bottom: 20px; background-color: #4A90E2; color: white; border: none; border-radius: 12px; font-size: 1.0rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3); transition: all 0.2s; }
-
-#whatsappButton { 
-    width: 100%; 
-    padding: 18px; 
-    background-color: #25D366; 
-    color: white; 
-    border: none; 
-    border-radius: 12px; 
-    font-size: 1.2rem; 
-    font-weight: 800; 
-    cursor: pointer; 
-    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.6); 
-    transition: all 0.2s; 
-    display: flex; 
-    align-items: center; 
+#whatsappButton {
+    width: 100%;
+    padding: 15px 0;
+    border: none;
+    border-radius: 15px;
+    background-color: #25D366; /* لون الواتساب الأصلي */
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 8px 15px rgba(37, 211, 102, 0.4); /* ظل بارز */
+    display: flex;
+    align-items: center;
     justify-content: center;
-    flex-shrink: 0;
 }
-#whatsappButton:hover { background-color: #1FAF59; transform: translateY(-2px) scale(1.01); }
-.icon { width: 22px; height: 22px; margin-left: 10px; filter: drop-shadow(0 0 1px rgba(0,0,0,0.2)); }
+#whatsappButton:hover {
+    background-color: #1EBE5A;
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 10px 20px rgba(37, 211, 102, 0.6);
+}
+#whatsappButton:active {
+    transform: translateY(0) scale(1.0);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 
-.prominent-note { font-size: 0.85rem; font-weight: 700; color: #FF5722; padding: 5px 0; text-align: center; margin-top: 15px;}
+.icon { 
+    width: 22px; 
+    height: 22px; 
+    filter: drop-shadow(0 0 1px rgba(0,0,0,0.2)); 
+    transition: margin 0.2s; /* إضافة انتقال للهامش عند تبديل الاتجاه */
+}
+
+/* موضع أيقونة الواتساب (يتبع الاتجاه) */
+[dir="rtl"] .icon { margin-left: 10px; margin-right: 0; } 
+[dir="ltr"] .icon { margin-right: 10px; margin-left: 0; } 
 
 
 /* ------------------ Share Section & Footer ------------------ */
@@ -174,19 +286,40 @@ body {
 }
 .share-title { font-size: 0.9rem; color: #555; margin-bottom: 15px; font-weight: 600; }
 .share-icons { display: flex; justify-content: space-between; gap: 8px; }
-.share-btn { flex-grow: 1; padding: 12px 0; border-radius: 12px; border: none; color: white; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); transition: transform 0.2s, opacity 0.2s; }
-.share-btn:hover { transform: translateY(-1px); opacity: 0.9; }
-.share-btn.whatsapp-share { background-color: #25D366; }
+.share-btn { 
+    flex-grow: 1; 
+    padding: 12px 0; 
+    border-radius: 12px; 
+    border: none; 
+    color: white; 
+    font-size: 1.4rem; 
+    cursor: pointer; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+    transition: transform 0.2s;
+}
+.share-btn:hover {
+    transform: scale(1.05);
+}
+.share-btn.facebook { background-color: #3b5998; }
 .share-btn.messenger { background-color: #0078FF; }
-.share-btn.facebook { background-color: #1877F2; }
+.share-btn.whatsapp-share { background-color: #25D366; }
 
 .app-footer {
     width: 100%;
     text-align: center;
-    margin-top: 20px; 
-    padding: 15px 0 0 0; 
-    border-top: 1px solid #f0f0f0;
+    padding-top: 15px;
+    font-size: 0.75rem;
+    color: #999;
     flex-shrink: 0;
 }
-.contact-link { color: #075E54; text-decoration: none; font-weight: 800; font-size: 0.95rem; display: block; margin-bottom: 8px; transition: color 0.3s; }
-.copyright-text { margin: 5px 0; font-size: 0.8rem; color: #aaa; }
+.contact-link {
+    color: #075E54;
+    text-decoration: none;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+}
+.owner-name {
+    font-weight: 700;
+    color: #666;
+}
