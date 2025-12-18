@@ -164,33 +164,46 @@ function openWhatsApp() {
 }
 
 function shareApp(platform) {
+    let url = '';
     const finalLink = APP_LINK + '?source=share'; 
     const finalMessage = SHARE_MESSAGE.replace(APP_LINK, finalLink);
-
-    // 1. استخدام واجهة المشاركة الأصلية (الأفضل للهواتف)
+    
+    // ** الحل الموثوق للماسنجر/الفيسبوك/الواتساب على الهواتف **
     if (navigator.share) {
         navigator.share({
             title: 'مراسل الواتساب الفوري',
             text: finalMessage,
             url: finalLink,
         })
-        .then(() => console.log('تمت المشاركة بنجاح.'))
-        .catch((error) => console.log('فشلت المشاركة:', error));
-        return; 
+        .then(() => console.log('تمت المشاركة بنجاح عبر الواجهة الأصلية.'))
+        .catch(() => {
+             // في حالة فشل المشاركة الأصلية (مثل إلغاء المستخدم)، ننتقل للخطة البديلة
+             if (platform === 'whatsapp') {
+                url = `https://wa.me/?text=${encodeURIComponent(finalMessage)}`;
+             } else if (platform === 'messenger') {
+                url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(finalLink)}&quote=${encodeURIComponent(finalMessage)}`;
+             } else if (platform === 'facebook') {
+                url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(finalLink)}&quote=${encodeURIComponent(finalMessage)}`;
+             }
+             if (url) {
+                window.open(url, '_blank', 'width=600,height=400');
+             }
+        });
+        return;
     }
-
-    // 2. خطة بديلة (Fallback) في حال عدم توفر واجهة المشاركة الأصلية (للحواسيب مثلاً)
-    let url = '';
     
+    // ** الخطة البديلة للحواسيب أو الأجهزة القديمة **
     switch (platform) {
         case 'whatsapp':
-            // خيار احتياطي لواتساب على الويب
             url = `https://wa.me/?text=${encodeURIComponent(finalMessage)}`;
             break;
             
         case 'messenger':
+            // نستخدم رابط المشاركة العامة كخطة بديلة للماسنجر على الأجهزة التي لا تدعم المشاركة الأصلية
+            url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(finalLink)}&quote=${encodeURIComponent(finalMessage)}`;
+            break;
+            
         case 'facebook':
-            // خيار احتياطي لفيسبوك/ماسنجر على الويب (يفتح واجهة المشاركة العامة)
             url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(finalLink)}&quote=${encodeURIComponent(finalMessage)}`;
             break;
             
