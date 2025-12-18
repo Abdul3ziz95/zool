@@ -31,7 +31,7 @@
         <div class="phone-input-container">
             <div class="country-code-wrapper">
                 <span id="currentFlag" class="flag-icon flag-icon-sd"></span>
-                <input type="tel" id="codeInput" value="+249" inputmode="numeric" placeholder="+XXX">
+                <input type="tel" id="codeInput" value="+249" inputmode="numeric" placeholder="+XXX" oninput="checkCodeInput()">
             </div>
             <input type="tel" id="phoneInput" placeholder="أدخل الرقم المحلي (بدون الرمز)" inputmode="numeric">
         </div>
@@ -61,7 +61,6 @@
             });
         }
         
-        // المتصفح يطلق هذا الحدث إذا كان التطبيق جاهزاً للتثبيت
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e; 
@@ -111,7 +110,7 @@
 
         const selectElement = document.getElementById('countryCode');
         const currentFlagSpan = document.getElementById('currentFlag');
-        const codeInput = document.getElementById('codeInput'); // الحصول على حقل الإدخال الجديد
+        const codeInput = document.getElementById('codeInput'); 
         const phoneInput = document.getElementById('phoneInput'); 
         
         function populateCountries() {
@@ -129,17 +128,34 @@
             updateFlagAndCode('249');
         }
 
-        // تم تعديل هذه الدالة لتحديث حقل الإدخال الجديد
-        function updateFlagAndCode(code) {
-            const country = countryData.find(c => c.code === code);
+        // الدالة العامة لتحديث العلم وحقل الإدخال والقائمة
+        function updateFlagAndCode(code, source = 'select') {
+            const cleanedCode = String(code).replace('+', '').trim();
+            const country = countryData.find(c => c.code === cleanedCode);
+            
             if (country) {
                 codeInput.value = `+${country.code}`;
                 currentFlagSpan.className = `flag-icon flag-icon-${country.iso}`;
-                selectElement.value = code;
-            } else if (!code) {
-                 // حالة إذا لم يتم العثور على الدولة أو تم إفراغ الحقل
-                 currentFlagSpan.className = `flag-icon`;
+                
+                // تحديث القائمة المنسدلة فقط إذا جاء التحديث من القائمة نفسها
+                if (source === 'select') {
+                    selectElement.value = country.code;
+                }
+            } else {
+                // إذا لم يتم العثور على العلم، إزالة العلم
+                currentFlagSpan.className = `flag-icon`;
             }
+        }
+        
+        // الدالة الجديدة: تحديث العلم عند الكتابة في حقل الإدخال
+        function checkCodeInput() {
+            const code = codeInput.value.replace('+', '').trim();
+            
+            // تحديث العلم بناءً على الكود المدخل
+            updateFlagAndCode(code, 'input');
+            
+            // مسح القيمة المختارة في القائمة المنسدلة
+            selectElement.value = '';
         }
 
         // محاولة تحديد الدولة التلقائي بناءً على IP (باستخدام خدمة مجانية)
@@ -160,9 +176,8 @@
             }
         }
 
-        // تم تعديل هذه الدالة لقراءة الرمز من حقل الإدخال الجديد
         function openWhatsApp() {
-            const code = codeInput.value.replace('+', '').trim(); // قراءة الرمز من حقل الإدخال
+            const code = codeInput.value.replace('+', '').trim(); 
             const localNumber = phoneInput.value.trim().replace(/[\s+-]/g, '');
 
             if (!code || code.length < 1) {
