@@ -3,7 +3,7 @@
   "name": "دردشة مباشرة",
   "short_name": "دردشة مباشرة ",
   "description": "أداة لفتح محادثة واتساب بدون حفظ الرقم مع دعم مفاتيح الدول.",
-  "start_url": "/zool/index.html",
+  "start_url": "/zol/", 
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#EAEAEA",
