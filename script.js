@@ -1,7 +1,6 @@
-
 const APP_LINK = 'https://abdul3ziz95.github.io/zool/';
 const SHARE_MESSAGE = 'جربوا مراسل الواتساب السوداني الفوري! أسرع طريقة لبدء محادثة دون حفظ الرقم. الرابط: ' + APP_LINK;
-const CURRENT_VERSION = '20251224';
+const CURRENT_VERSION = '20251225'; // الإصدار المحدث
 
 const COUNTRY_DATA = [
     { name: 'السودان', code: '249', iso: 'sd' }, { name: 'المملكة العربية السعودية', code: '966', iso: 'sa' },
@@ -50,7 +49,7 @@ COUNTRY_DATA.forEach(country => {
 
 const codeInput = document.getElementById('codeInput'); 
 const phoneInput = document.getElementById('phoneInput'); 
-const messageInput = document.getElementById('messageInput');
+// تم حذف messageInput
 const countryInput = document.getElementById('countryInput');
 const countryOptionsList = document.getElementById('country-options');
 const currentFlagSpan = document.getElementById('currentFlag');
@@ -77,13 +76,10 @@ function updateCodeFromCountry(selectedValue) {
     const code = match ? match[2] : '';
     
     if (code) {
-        // تحديث حقل الرمز
         codeInput.value = `+${code}`;
         updateFlag(code);
         savedCountryValue = selectedValue;
     } else {
-        // إذا كتب المستخدم نصاً غير موجود في القائمة، أعد القيمة القديمة عند الضياع
-        // أو حاول تحديث العلم إذا كان النص يبدو كرمز
         updateFlag(codeInput.value.replace('+', '').trim());
     }
 }
@@ -92,14 +88,12 @@ function updateCodeFromCountry(selectedValue) {
 function updateCountryFromCode(inputValue) {
     let code = inputValue.replace('+', '').trim(); 
     
-    // إذا كان الإدخال يدوياً، احتفظ بالإشارة +
     if (!inputValue.startsWith('+') && code) {
          codeInput.value = `+${code}`;
     } else if (!code) {
-        codeInput.value = '+'; // لتبقى الإشارة ظاهرة
+        codeInput.value = '+'; 
     }
 
-    // تحديث العلم وحقل الدولة بناءً على الرمز
     updateFlag(code);
 }
 
@@ -108,15 +102,11 @@ function updateFlag(code) {
     const countryInfo = codeMap[code];
 
     if (countryInfo) {
-        // تحديث العلم
         currentFlagSpan.className = `flag-icon flag-icon-${countryInfo.iso.toLowerCase()}`;
-        
-        // تحديث حقل الدولة ليعكس الاختيار
         countryInput.value = `${countryInfo.name} (+${code})`;
         savedCountryValue = countryInput.value;
     } else {
-         // إذا لم يتم العثور على الرمز
-        currentFlagSpan.className = `flag-icon flag-icon-un`; // علم افتراضي
+        currentFlagSpan.className = `flag-icon flag-icon-un`;
     }
 }
 
@@ -132,7 +122,9 @@ function restoreCountryValue() {
 function openWhatsApp() {
     const code = codeInput.value.replace('+', '').trim(); 
     const localNumber = phoneInput.value.trim().replace(/[\s+-]/g, '');
-    const message = messageInput.value.trim();
+    
+    // الرسالة التلقائية المطلوبة
+    const autoMessage = "السلام عليكم"; 
 
     if (!code || !localNumber || localNumber.length < 6) {
         alert('الرجاء إدخال رقم هاتف محلي صالح (لا يقل عن 6 أرقام) ورمز الدولة.');
@@ -142,8 +134,9 @@ function openWhatsApp() {
     const fullNumber = code + localNumber;
     let whatsappLink = 'https://wa.me/' + fullNumber;
 
-    if (message) {
-        whatsappLink += `?text=${encodeURIComponent(message)}`;
+    // تضمين الرسالة التلقائية
+    if (autoMessage) {
+        whatsappLink += `?text=${encodeURIComponent(autoMessage)}`;
     }
     
     window.open(whatsappLink, '_blank');
@@ -226,3 +219,4 @@ function setupPWA() {
 }
 
 window.addEventListener('load', initializeApp);
+
