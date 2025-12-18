@@ -137,7 +137,7 @@
                 codeInput.value = `+${country.code}`;
                 currentFlagSpan.className = `flag-icon flag-icon-${country.iso}`;
                 
-                // تحديث القائمة المنسدلة فقط إذا جاء التحديث من القائمة نفسها
+                // تحديث القائمة المنسدلة
                 if (source === 'select') {
                     selectElement.value = country.code;
                 }
