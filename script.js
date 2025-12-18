@@ -2,7 +2,7 @@
 const APP_LINK = 'https://abdul3ziz95.github.io/zol/';
 const CURRENT_VERSION = '20251227'; // الإصدار المحدث
 
-// ************** بيانات الدول (تمت إضافة name_en) **************
+// ************** بيانات الدول (تمت إضافة name_en لجميع الدول) **************
 const COUNTRY_DATA = [
     { name_ar: 'السودان', name_en: 'Sudan', code: '249', iso: 'sd' }, 
     { name_ar: 'المملكة العربية السعودية', name_en: 'Saudi Arabia', code: '966', iso: 'sa' },
@@ -96,7 +96,6 @@ const COUNTRY_DATA = [
     { name_ar: 'هندوراس', name_en: 'Honduras', code: '504', iso: 'hn' },
     { name_ar: 'المجر', name_en: 'Hungary', code: '36', iso: 'hu' }, 
     { name_ar: 'أيسلندا', name_en: 'Iceland', code: '354', iso: 'is' },
-    { name_ar: 'الهند', name_en: 'India', code: '91', iso: 'in' }, // تم تكرارها، تم الإبقاء على النسخة الأخيرة لتكون هي المستخدمة في النهاية
     { name_ar: 'إندونيسيا', name_en: 'Indonesia', code: '62', iso: 'id' }, 
     { name_ar: 'إيران', name_en: 'Iran', code: '98', iso: 'ir' },
     { name_ar: 'أيرلندا', name_en: 'Ireland', code: '353', iso: 'ie' }, 
@@ -208,7 +207,7 @@ COUNTRY_DATA.forEach(country => {
 });
 
 
-// ************** كائن الترجمة **************
+// ************** كائن الترجمة (محدث بالرسائل الجديدة) **************
 const TRANSLATIONS = {
     ar: {
         title: "دردشة مباشرة",
@@ -241,7 +240,9 @@ const TRANSLATIONS = {
         copyright: "All rights reserved © 2025. <span class='owner-name'>Abdul3ziz95</span>",
         alert_msg: "Please enter a valid local phone number (at least 6 digits) and country code.",
         initial_country: "Sudan (+249)",
-        share_message: 'Try the instant WhatsApp messenger! The fastest way to start a conversation without saving the number. Link: ' + APP_LINK,
+        // تم تحديث رسالة المشاركة الإنجليزية
+        share_message: 'Try WhatsApp Instant Messenger! The fastest way to start a conversation without saving the number. Link: ' + APP_LINK,
+        // تم تحديث الرسالة التلقائية الإنجليزية
         initial_whatsapp_msg: "Hello"
     }
 };
@@ -263,7 +264,7 @@ let deferredPrompt;
 // ************** 1. وظائف التحكم في الدولة **************
 
 /**
- * يملأ قائمة datalist بأسماء الدول بناءً على اللغة المحددة.
+ * يملأ قائمة datalist بأسماء الدول بناءً على اللغة المحددة (مهم للبحث).
  * @param {string} lang - اللغة المراد استخدامها ('ar' أو 'en').
  */
 function populateDatalist(lang) {
@@ -277,61 +278,87 @@ function populateDatalist(lang) {
     });
 }
 
+/**
+ * تحديث رمز الدولة والعلم عند اختيار الدولة من قائمة البحث.
+ */
 function updateCodeFromCountry(selectedValue) {
     if (selectedValue.trim() === '') return;
-    const match = selectedValue.match(/\(([^)]+)\)$/);
-    if (match) {
-        let code = match[1].replace('+', '');
-        codeInput.value = '+' + code;
+    const match = selectedValue.match(/\((\+?)(\d+)\)/); // يستخرج الرقم بين الأقواس
+    const code = match ? match[2] : '';
+
+    if (code) {
+        codeInput.value = `+${code}`;
         updateFlag(code);
+        
+        // حفظ القيمة المحدثة باللغة الحالية
+        const country = codeMap[code];
+        const langKey = currentLang === 'ar' ? 'name_ar' : 'name_en';
+        savedCountryValue = `${country[langKey]} (+${country.code})`;
     }
 }
 
+/**
+ * تحديث الدولة والعلم عند إدخال رمز الدولة يدوياً.
+ */
 function updateCountryFromCode(inputValue) {
     let code = inputValue.replace('+', '').trim();
-    if (code.length === 0) {
-        currentFlagSpan.className = 'flag-icon flag-icon-sd';
-        countryInput.value = '';
-        return;
-    }
     
+    // يضمن وجود علامة + في بداية المدخل
+    if (!inputValue.startsWith('+') && code) {
+         codeInput.value = `+${code}`;
+    } else if (!code && codeInput.value === '+') {
+         codeInput.value = '+'; // يحافظ على علامة + إذا كان فارغاً
+    }
+
     code = code.replace(/^0+/, ''); 
     const langKey = currentLang === 'ar' ? 'name_ar' : 'name_en'; 
 
     if (codeMap[code]) {
         updateFlag(code);
         const country = codeMap[code];
-        // استخدام اسم الدولة باللغة الحالية
+        // تحديث حقل الدولة بالاسم باللغة الحالية
         countryInput.value = `${country[langKey]} (+${country.code})`; 
         savedCountryValue = countryInput.value;
     } else {
+        // إذا لم يتم العثور على تطابق، يعرض علم افتراضي (السودان هنا)
         currentFlagSpan.className = 'flag-icon flag-icon-sd'; 
     }
 }
 
+/**
+ * وظيفة مساعدة لتحديث أيقونة العلم بناءً على رمز الدولة.
+ */
 function updateFlag(code) {
     const country = codeMap[code];
     if (country) {
         currentFlagSpan.className = `flag-icon flag-icon-${country.iso}`;
+    } else {
+        // علم افتراضي إذا لم يتم العثور على رمز الدولة (مثل علم الأمم المتحدة 'un')
+        currentFlagSpan.className = 'flag-icon flag-icon-un'; 
     }
 }
 
+/**
+ * يستعيد القيمة المحفوظة لمدخل الدولة عند فقدان التركيز (blur) إذا كان فارغاً.
+ */
 function restoreCountryValue() {
-    if (countryInput.value === '') {
+    if (countryInput.value.trim() === '') {
         countryInput.value = savedCountryValue;
     }
 }
 
-// ************** 2. وظيفة التحديد التلقائي **************
+// ************** 2. وظيفة التحديد التلقائي عبر IP (مُعاد تفعيلها) **************
 
 async function setCountryAuto() {
     let code = '249'; 
     let iso = 'sd';
     
     try {
+        // استخدام خدمة IP أكثر استقراراً
         const response = await fetch('https://ipapi.co/json/');
         const data = await response.json();
-        if (data.country_calling_code) {
+        
+        if (data.country_calling_code && data.country_code) {
             let potentialCode = data.country_calling_code.replace('+', '');
             if (codeMap[potentialCode]) {
                  code = potentialCode;
@@ -339,13 +366,15 @@ async function setCountryAuto() {
             }
         }
     } catch (e) {
-        // لا مشكلة
+        // فشل تحديد الموقع، تبقى القيم الافتراضية
     }
 
     const country = codeMap[code];
     const langKey = currentLang === 'ar' ? 'name_ar' : 'name_en';
+    
     codeInput.value = '+' + code;
     currentFlagSpan.className = `flag-icon flag-icon-${iso}`;
+    
     // تعيين اسم الدولة باللغة الافتراضية
     countryInput.value = `${country[langKey]} (+${country.code})`;
     savedCountryValue = countryInput.value;
@@ -357,6 +386,7 @@ async function setCountryAuto() {
 function openWhatsApp() {
     const code = codeInput.value.replace('+', '').trim(); 
     const localNumber = phoneInput.value.trim().replace(/[\s+-]/g, '');
+    // استخدام الرسالة التلقائية الخاصة باللغة الحالية
     const autoMessage = TRANSLATIONS[currentLang].initial_whatsapp_msg; 
 
     if (!code || !localNumber || localNumber.length < 6) {
@@ -377,6 +407,7 @@ function openWhatsApp() {
 function shareApp(platform) {
     let url = '';
     const finalLink = APP_LINK + '?source=share'; 
+    // استخدام رسالة المشاركة الخاصة باللغة الحالية
     const finalMessage = TRANSLATIONS[currentLang].share_message.replace(APP_LINK, finalLink); 
     
     switch (platform) {
@@ -396,7 +427,7 @@ function shareApp(platform) {
 }
 
 
-// ************** 4. وظيفة تبديل اللغة (الأداء فائق السرعة) **************
+// ************** 4. وظيفة تبديل اللغة **************
 
 function toggleLanguage() {
     // تبديل اللغة الحالية
@@ -425,7 +456,7 @@ function toggleLanguage() {
         }
     });
     
-    // 3. تحديث قائمة الدول (الميزة الجديدة - فوري)
+    // 3. تحديث قائمة الدول (لتسهيل البحث باللغة الجديدة)
     populateDatalist(currentLang);
     
     // 4. تحديث مظهر زر التبديل
@@ -485,6 +516,9 @@ function initializeApp() {
     setupPWA();
 }
 
+/**
+ * إعداد وظائف PWA لزر التثبيت.
+ */
 function setupPWA() {
      if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
@@ -499,12 +533,14 @@ function setupPWA() {
             .catch(() => {});
     }
     
+    // يظهر الزر عندما يصبح التطبيق قابلاً للتثبيت
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e; 
         installButton.style.display = 'block'; 
     });
 
+    // يخفي الزر عند النقر والتثبيت
     installButton.addEventListener('click', () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
