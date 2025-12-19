@@ -171,9 +171,19 @@ function shareApp(platform) {
         case 'whatsapp':
             url = `https://wa.me/?text=${encodeURIComponent(finalMessage)}`;
             break;
-        case 'messenger':
-            url = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(finalLink)}&app_id=1234567890&redirect_uri=${encodeURIComponent(finalLink)}`;
+                case 'messenger':
+            if (navigator.share) {
+                navigator.share({
+                    title: 'دردشة مباشرة',
+                    text: finalMessage,
+                    url: finalLink
+                }).catch(() => {});
+                url = null;
+            } else {
+                url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(finalLink)}`;
+            }
             break;
+
         case 'facebook':
             url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(finalLink)}`;
             break;
