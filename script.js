@@ -1,4 +1,3 @@
-
 const APP_LINK = 'https://abdul3ziz95.github.io/zol/';
 const SHARE_MESSAGE = 'جربوا مراسل الواتساب الفوري! أسرع طريقة لبدء محادثة دون حفظ الرقم. الرابط: ' + APP_LINK;
 const CURRENT_VERSION = '20251227'; // الإصدار المحدث
@@ -183,30 +182,31 @@ function shareApp(platform) {
     window.open(url, '_blank', 'width=600,height=400');
 }
 
-// الدالة المضمونة للعمل في جميع المتصفحات (مع حل بديل للواتساب)
+// الدالة المعدلة: الاكتفاء بواجهة المشاركة النظامية فقط
 function shareContentInSamePage() {
     const textToShare = 'جربوا مراسل الواتساب الفوري! أسرع طريقة لبدء محادثة دون حفظ الرقم. الرابط';
     const urlToShare = 'https://abdul3ziz95.github.io/zol/';
-    const fullMessage = textToShare + ' ' + urlToShare;
-
+    
     const shareData = {
         title: 'مراسل واتساب فوري',
         text: textToShare,
         url: urlToShare
     };
 
-    // 1. محاولة استخدام واجهة المشاركة النظامية (Web Share API)
+    // محاولة استخدام واجهة المشاركة النظامية (Web Share API)
     if (navigator.share) {
         navigator.share(shareData)
             .then(() => console.log('تمت المشاركة بنجاح عبر الواجهة النظامية.'))
             .catch((error) => {
-                // إذا فشلت الواجهة النظامية، ننتقل للحل البديل لضمان العمل
-                console.error('فشل Web Share API. التحويل إلى رابط مباشر:', error);
-                window.open(`https://wa.me/?text=${encodeURIComponent(fullMessage)}`, '_blank');
+                // في حالة فشل المشاركة النظامية، لا يتم تفعيل أي حل بديل
+                console.error('فشل Web Share API. لا يوجد حل بديل مفعل.', error);
+                // يمكنك إزالة التعليق من السطر التالي إذا أردت تنبيه المستخدم في حال فشلت المشاركة
+                // alert('فشل فتح قائمة المشاركة.');
             });
     } else {
-        // 2. الحل البديل المضمون (عند عدم دعم المتصفح)
-        window.open(`https://wa.me/?text=${encodeURIComponent(fullMessage)}`, '_blank');
+        // عند عدم دعم المتصفح، لا يتم تفعيل أي حل بديل
+        console.error('خاصية المشاركة غير مدعومة في هذا المتصفح.');
+        // alert('خاصية المشاركة غير مدعومة في متصفحك.');
     }
 }
 
@@ -266,3 +266,4 @@ function setupPWA() {
 }
 
 window.addEventListener('load', initializeApp);
+
