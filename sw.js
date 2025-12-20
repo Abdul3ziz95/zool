@@ -1,10 +1,11 @@
+
 const CACHE_NAME = 'whatsapp-messenger-v20251227'; //  *** رقم الإصدار الجديد ***
 const urlsToCache = [
-    '/zol/', // ✅ تم التحديث
-    '/zol/index.html?v=20251227', // ✅ تم التحديث
-    '/zol/style.css?v=20251227', // ✅ تم التحديث
-    '/zol/script.js?v=20251227', // ✅ تم التحديث
-    '/zol/manifest.json?v=20251227', // ✅ تم التحديث
+    '/', 
+    '/index.html?v=20251227', 
+    '/style.css?v=20251227', 
+    '/script.js?v=20251227', 
+    '/manifest.json?v=20251227', 
     'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
     'https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap',
@@ -48,4 +49,3 @@ self.addEventListener('activate', event => {
         })
     );
 });
-
