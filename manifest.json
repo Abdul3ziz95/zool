@@ -3,7 +3,7 @@
   "name": "دردشة مباشرة",
   "short_name": "دردشة مباشرة",
   "description": "أداة لفتح محادثة واتساب بدون حفظ الرقم مع دعم مفاتيح الدول.",
-  "start_url": "/zol/", 
+  "start_url": ".", 
   "display": "standalone",
   "display_override": ["standalone"],
   "orientation": "portrait",
@@ -25,7 +25,7 @@
     {
       "name": "بدء محادثة جديدة",
       "short_name": "جديدة",
-      "url": "/zol/",
+      "url": ".",
       "icons": [ { "src": "whatsapp-icon.png", "sizes": "512x512" } ]
     }
   ]
