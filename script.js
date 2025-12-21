@@ -235,4 +235,3 @@ function setupPWA() {
 }
 
 window.addEventListener('load', initializeApp);
-
