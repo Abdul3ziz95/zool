@@ -1,8 +1,32 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "io.github.abdul3ziz95.twa",
-        "sha256_cert_fingerprints": ["9B:D3:E6:50:3D:ED:36:96:D6:5D:F2:9B:4E:58:71:54:95:A9:A3:3E:15:65:D6:13:1B:B4:95:CD:76:E0:9D:83"]
-      }
-    }]
+
+{
+  "name": "دردشة مباشرة",
+  "short_name": "دردشة مباشرة",
+  "description": "أداة لفتح محادثة واتساب بدون حفظ الرقم مع دعم مفاتيح الدول.",
+  "start_url": ".", 
+  "display": "standalone",
+  "display_override": ["standalone"],
+  "orientation": "portrait",
+  "background_color": "#EAEAEA",
+  "theme_color": "#25D366",
+  "icons": [
+    {
+      "src": "whatsapp-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "whatsapp-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "بدء محادثة جديدة",
+      "short_name": "جديدة",
+      "url": ".",
+      "icons": [ { "src": "whatsapp-icon.png", "sizes": "512x512" } ]
+    }
+  ]
+}
